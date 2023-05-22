@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { LocalStrategy } from './local.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { LocalStrategy } from './local.strategy';
     providers: [
         AuthService,
         LocalStrategy,
+        JwtStrategy,
         {
             provide: APP_PIPE,
             useValue: new ValidationPipe({
