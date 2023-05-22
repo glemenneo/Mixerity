@@ -39,13 +39,10 @@ export class AuthService {
         return this.usersService.create(email, username, hash);
     }
 
-    async validateUser(
-        emailOrUsername: string,
-        password: string,
-    ): Promise<User> {
+    async validateUser(username: string, password: string): Promise<User> {
         const users = await Promise.all([
-            this.usersService.findOneByEmail(emailOrUsername),
-            this.usersService.findOneByUsername(emailOrUsername),
+            this.usersService.findOneByEmail(username),
+            this.usersService.findOneByUsername(username),
         ]);
 
         const userExists = users.reduce(
