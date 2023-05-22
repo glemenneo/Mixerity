@@ -51,7 +51,10 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Put('/password')
-    async updatePassword(@Request() req, @Body() dto: UpdatePasswordDto) {
+    async updatePassword(
+        @Request() req,
+        @Body() dto: UpdatePasswordDto,
+    ): Promise<User> {
         const { uid } = req.user;
         const { password } = dto;
         return this.authService.updatePassword(uid, password);
