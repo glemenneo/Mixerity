@@ -107,11 +107,26 @@ export default class extends Vue {
   };
 
   handleLoginButtonClick(): void {
-    const auth1 = this.authForm;
-    this.$store.dispatch(`auth/${AuthActions.LOGIN_USER}`, auth1);
-    // Todo: sync with backend
-    // On success response
-    setTimeout(() => this.$router.push(`/posts`), 1000);
+    const user = this.authForm;
+    console.log("user: ", user);
+    const isLoginSuccessful = this.$store.dispatch(
+      `auth/${AuthActions.LOGIN_USER}`,
+      user
+    );
+    isLoginSuccessful.then((res) => {
+      if (!res) {
+        this.$message({
+          message: "Login failed, please try again",
+          type: "error",
+        });
+      } else {
+        this.$message({
+          message: "Login successful!",
+          type: "success",
+        });
+        setTimeout(() => this.$router.push(`/posts`), 1000);
+      }
+    });
   }
 
   handleRegisterButtonClick(): void {

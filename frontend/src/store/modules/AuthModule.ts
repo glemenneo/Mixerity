@@ -2,8 +2,11 @@ import Vue from "vue";
 import Vuex, { ActionTree, GetterTree, MutationTree } from "vuex";
 import { RootState } from "@/store/index";
 import AuthModel from "@/models/AuthModel";
+import axios from "axios";
 
 Vue.use(Vuex);
+
+const authUrl = "http://localhost:3000/auth/";
 
 export enum AuthActions {
   LOGIN_USER = "LOGIN_USER",
@@ -27,8 +30,7 @@ const getters: GetterTree<UsersState, RootState> = {
 const mutations: MutationTree<UsersState> = {
   [AuthActions.LOGIN_USER](state, payload: AuthModel): void {
     state.authUser = payload;
-    console.log("User logged in:", payload);
-    // To do: sync with backend
+    console.log("User logged in.");
   },
   [AuthActions.LOGOUT_USER](state): void {
     state.authUser = null;
@@ -36,16 +38,37 @@ const mutations: MutationTree<UsersState> = {
 };
 
 const actions: ActionTree<UsersState, RootState> = {
-  [AuthActions.LOGIN_USER](context, payload): void {
-    setTimeout(() => context.commit(AuthActions.LOGIN_USER, payload), 1000);
-    // To do: sync with backend
+  [AuthActions.LOGIN_USER](context, payload): Promise<boolean | undefined> {
+    const loginUser = async () => {
+      try {
+        const res = await axios.post(`${authUrl}login`, payload);
+        if (res.status === 201) {
+          context.commit(AuthActions.LOGIN_USER, res.data);
+          return true;
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        return false;
+      }
+    };
+    return loginUser();
   },
   [AuthActions.LOGOUT_USER](context): void {
     setTimeout(() => context.commit(AuthActions.LOGOUT_USER), 1000);
   },
-  [AuthActions.REGISTER_USER](context, payload): void {
-    setTimeout(() => context.commit(AuthActions.REGISTER_USER, payload), 1000);
-    // To do: sync with backend
+  [AuthActions.REGISTER_USER](_, payload): Promise<boolean | undefined> {
+    const registerUser = async () => {
+      try {
+        const res = await axios.post(`${authUrl}register`, payload);
+        if (res.status === 201) {
+          return true;
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        return false;
+      }
+    };
+    return registerUser();
   },
 };
 
