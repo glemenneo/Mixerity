@@ -1,12 +1,16 @@
 <template>
-  <div class="app-body"></div>
+  <div class="app-body">
+    <BaseMenu />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import BaseMenu from "./components/ui/BaseMenu.vue";
 
 @Component({
   name: "App",
+  components: { BaseMenu },
 })
 export default class extends Vue {}
 </script>
