@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
+import { plainToInstance } from 'class-transformer';
 import { AuthService } from './auth.service';
 import { User } from 'src/users/entities/user.entity';
 
@@ -10,7 +11,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         super({ usernameField: 'emailOrUsername', passwordField: 'password' });
     }
 
-    validate(emailOrUsername: string, password: string): Promise<User> {
+    validate(
+        emailOrUsername: string,
+        password: string,
+    ): Promise<Partial<User>> {
         return this.authService.validateUser(emailOrUsername, password);
     }
 }
