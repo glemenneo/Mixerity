@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_PIPE } from '@nestjs/core';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
@@ -13,6 +14,15 @@ import { LocalStrategy } from './local.strategy';
         JwtModule.registerAsync({ useFactory: async () => ({}) }),
     ],
     controllers: [AuthController],
-    providers: [AuthService, LocalStrategy],
+    providers: [
+        AuthService,
+        LocalStrategy,
+        {
+            provide: APP_PIPE,
+            useValue: new ValidationPipe({
+                whitelist: true,
+            }),
+        },
+    ],
 })
 export class AuthModule {}
