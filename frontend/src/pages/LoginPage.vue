@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import LoginView from "@/components/auth/LoginView.vue";
+import LoginView from "@/components/auth/LoginForm.vue";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
