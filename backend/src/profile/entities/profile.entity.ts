@@ -1,4 +1,10 @@
-import { Entity, Column, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+    Entity,
+    Column,
+    OneToOne,
+    PrimaryColumn,
+    CreateDateColumn,
+} from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 
 @Entity()
@@ -18,6 +24,9 @@ export class Profile {
 
     @Column({ default: '[]' })
     friends: string;
+
+    @CreateDateColumn()
+    created: Date;
 
     constructor(partial: Partial<Profile>) {
         Object.assign(this, partial);
