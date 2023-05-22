@@ -6,6 +6,7 @@ import {
     Body,
     UseGuards,
     Request,
+    Put,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/users/entities/user.entity';
@@ -13,6 +14,7 @@ import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { COOKIE_OPTIONS } from 'src/common/constants/constants';
+import { UpdatePasswordDto } from './dtos/update-password.dto';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -45,5 +47,13 @@ export class AuthController {
         req.res.clearCookie('refresh-token');
 
         return user;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Put('/password')
+    async updatePassword(@Request() req, @Body() dto: UpdatePasswordDto) {
+        const { uid } = req.user;
+        const { password } = dto;
+        return this.authService.updatePassword(uid, password);
     }
 }
