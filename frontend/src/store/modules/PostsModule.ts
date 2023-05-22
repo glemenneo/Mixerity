@@ -29,6 +29,22 @@ const getters: GetterTree<PostsState, RootState> = {
     },
 };
 
+const mutations: MutationTree<PostsState> = {
+  [PostsActions.ADD_POST](state, payload: Post): void {
+    state.posts.push(payload);
+    // to do: add post to database
+  },
+  [PostsActions.DELETE_POST](state, payload: Post): void {
+    state.posts.filter((post) => post.pid !== payload.pid);
+    // to do: delete post from database
+  },
+  [PostsActions.UPDATE_POST](state, payload: Post): void {
+    state.posts.filter((post) => post.pid !== payload.pid);
+    state.posts.push(payload);
+    // to do: update post in database
+  },
+};
+
 const actions: ActionTree<PostsState, RootState> = {
   [PostsActions.ADD_POST](context, payload): void {
     setTimeout(() => context.commit(PostsActions.ADD_POST, payload), 1000);
@@ -82,5 +98,6 @@ export default {
     posts: [post1, post2, post3, post4],
   }),
   getters,
+  mutations,
   actions,
 };
