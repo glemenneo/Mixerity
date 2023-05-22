@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { COOKIE_OPTIONS } from 'src/common/constants/constants';
 
 @Controller('auth')
@@ -26,13 +27,23 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('/login')
-    async login(@Request() req) {
-        const { accessToken } = await this.authService.login(req.user);
+    async login(@Request() req): Promise<User> {
+        const { accessToken, refreshToken } = await this.authService.login(
+            req.user,
+        );
         req.res.cookie('access-token', accessToken, COOKIE_OPTIONS);
+        req.res.cookie('refresh-token', refreshToken, COOKIE_OPTIONS);
 
         return req.user;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('/logout')
-    logout() {}
+    async logout(@Request() req): Promise<User> {
+        const user = await this.authService.logout(req.user.uid);
+        req.res.clearCookie('access-token');
+        req.res.clearCookie('refresh-token');
+
+        return user;
+    }
 }
