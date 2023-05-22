@@ -70,11 +70,15 @@ export class AuthService {
         throw new UnauthorizedException('Incorrect credentials!');
     }
 
-    async login(user: User): Promise<{ accessToken: string }> {
+    async login(
+        user: User,
+    ): Promise<{ accessToken: string; refreshToken: string }> {
         const { uid } = user;
         const accessToken = await this.generateAccessToken(uid);
+        const refreshToken = await this.generateRefreshToken(uid);
+        await this.updateRefreshToken(uid, refreshToken);
 
-        return { accessToken };
+        return { accessToken, refreshToken };
     }
 
     async validateAccessToken(uid: number): Promise<User> {

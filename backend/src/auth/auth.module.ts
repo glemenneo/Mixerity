@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { JwtStrategy } from './jwt.strategy';
         AuthService,
         LocalStrategy,
         JwtStrategy,
+        JwtRefreshStrategy,
         {
             provide: APP_PIPE,
             useValue: new ValidationPipe({
