@@ -82,6 +82,7 @@ export class AuthService {
         if (!user) {
             throw new UnauthorizedException('Invalid JWT!');
         }
+
         return user;
     }
 
@@ -92,6 +93,26 @@ export class AuthService {
 
     deleteUser(uid: number): Promise<User> {
         return this.usersService.delete(uid);
+    }
+
+    async validateRefreshToken(
+        uid: number,
+        refreshToken,
+    ): Promise<User | null> {
+        const user = await this.usersService.findOneByUid(uid);
+        if (!user || !user.refreshToken || user.refreshToken !== refreshToken) {
+            throw new UnauthorizedException('Invalid refresh JWT!');
+        }
+
+        return user;
+    }
+
+    refreshAccessToken(uid: number): Promise<String> {
+        return this.generateAccessToken(uid);
+    }
+
+    logout(uid: number): Promise<User> {
+        return this.updateRefreshToken(uid, null);
     }
 
     private async emailExists(email: string): Promise<boolean> {
@@ -120,5 +141,23 @@ export class AuthService {
 
         const refreshToken = await this.jwtService.signAsync(payload, options);
         return refreshToken;
+    }
+
+    private async generateRefreshToken(uid: number): Promise<string> {
+        const payload = { sub: uid };
+        const options = {
+            secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+            expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRY'),
+        };
+
+        const refreshToken = await this.jwtService.signAsync(payload, options);
+        return refreshToken;
+    }
+
+    private updateRefreshToken(
+        uid: number,
+        refreshToken: string | null,
+    ): Promise<User> {
+        return this.usersService.update(uid, { uid, refreshToken });
     }
 }
