@@ -22,6 +22,7 @@ export class User {
     @Column()
     password: string;
 
+    @Exclude()
     @CreateDateColumn()
     created: Date;
 
