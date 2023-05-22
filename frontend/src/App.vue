@@ -1,5 +1,6 @@
 <template>
   <div class="app-body">
+    <BaseNavMenu />
     <BaseMenu />
   </div>
 </template>
@@ -7,10 +8,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import BaseMenu from "./components/ui/BaseMenu.vue";
+import BaseNavMenu from "./components/ui/BaseNavMenu.vue";
 
 @Component({
   name: "App",
-  components: { BaseMenu },
+  components: { BaseMenu, BaseNavMenu },
 })
 export default class extends Vue {}
 </script>
@@ -40,6 +42,7 @@ export default class extends Vue {}
   margin: 0px;
   padding: 0px;
   background: #f8fafc;
+  height: 100vh;
   font-family: "Inter", Helvetica, Arial, sans-serif;
 }
 /* Remove default margin */
