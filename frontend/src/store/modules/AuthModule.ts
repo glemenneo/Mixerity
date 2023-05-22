@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex, { ActionTree, GetterTree } from "vuex";
+import Vuex, { ActionTree, GetterTree, MutationTree } from "vuex";
 import { RootState } from "@/store/index";
 import AuthModel from "@/models/AuthModel";
 
@@ -24,6 +24,17 @@ const getters: GetterTree<UsersState, RootState> = {
   },
 };
 
+const mutations: MutationTree<UsersState> = {
+  [AuthActions.LOGIN_USER](state, payload: AuthModel): void {
+    state.authUser = payload;
+    console.log("User logged in:", payload);
+    // To do: sync with backend
+  },
+  [AuthActions.LOGOUT_USER](state): void {
+    state.authUser = null;
+  },
+};
+
 const actions: ActionTree<UsersState, RootState> = {
   [AuthActions.LOGIN_USER](context, payload): void {
     setTimeout(() => context.commit(AuthActions.LOGIN_USER, payload), 1000);
@@ -44,5 +55,6 @@ export default {
     authUser: null,
   }),
   actions,
+  mutations,
   getters,
 };
