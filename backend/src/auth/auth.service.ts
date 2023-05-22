@@ -35,7 +35,7 @@ export class AuthService {
             );
         }
 
-        const hash = AuthService.hashAndSalt(password);
+        const hash = await AuthService.hashAndSalt(password);
         return this.usersService.create(email, username, hash);
     }
 
