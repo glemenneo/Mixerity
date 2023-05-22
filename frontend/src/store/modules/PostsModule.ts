@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex, { ActionTree, GetterTree, MutationTree } from "vuex";
 import { Post } from "@/models/PostModel";
-import { RootState } from "../types";
+import { RootState } from "@/store/index";
 
 Vue.use(Vuex);
 

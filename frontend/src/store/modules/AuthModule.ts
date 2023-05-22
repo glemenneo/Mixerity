@@ -1,6 +1,6 @@
 import Vue from "vue";
-import Vuex, { ActionTree, GetterTree, MutationTree } from "vuex";
-import { RootState } from "../types";
+import Vuex, { ActionTree, GetterTree } from "vuex";
+import { RootState } from "@/store/index";
 import AuthModel from "@/models/AuthModel";
 
 Vue.use(Vuex);
