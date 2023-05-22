@@ -1,22 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { User } from './entities/user.entity';
+import { ProfileService } from 'src/profile/profile.service';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User) private usersRepository: Repository<User>,
+        private dataSource: DataSource,
+        private readonly profileService: ProfileService,
     ) {}
 
-    create(email, username, password): Promise<User> {
-        const user = this.usersRepository.create({
+    async create(email, username, password): Promise<User> {
+        let user = this.usersRepository.create({
             email,
             username,
             password,
         });
 
-        return this.usersRepository.save(user);
+        const queryRunner = this.dataSource.createQueryRunner();
+
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            user = await queryRunner.manager.save(user);
+            await this.profileService.create(user.uid, username);
+            await queryRunner.commitTransaction();
+        } catch (err) {
+            await queryRunner.rollbackTransaction();
+            throw err;
+        } finally {
+            await queryRunner.release();
+        }
+
+        return user;
     }
 
     findOneByUid(uid: number): Promise<User | null> {
@@ -46,11 +64,26 @@ export class UsersService {
     }
 
     async delete(uid: number): Promise<User> {
-        const user = await this.findOneByUid(uid);
+        let user = await this.findOneByUid(uid);
         if (!user) {
             throw new NotFoundException();
         }
 
-        return this.usersRepository.remove(user);
+        const queryRunner = this.dataSource.createQueryRunner();
+
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            user = await this.usersRepository.remove(user);
+            await this.profileService.delete(user.uid);
+            await queryRunner.commitTransaction();
+        } catch (err) {
+            await queryRunner.rollbackTransaction();
+            throw err;
+        } finally {
+            await queryRunner.release();
+        }
+
+        return user;
     }
 }
