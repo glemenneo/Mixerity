@@ -5,11 +5,13 @@ import {
     Post,
     Body,
     UseGuards,
+    Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { COOKIE_OPTIONS } from 'src/common/constants/constants';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -24,7 +26,12 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('/login')
-    login() {}
+    async login(@Request() req) {
+        const { accessToken } = await this.authService.login(req.user);
+        req.res.cookie('access-token', accessToken, COOKIE_OPTIONS);
+
+        return req.user;
+    }
 
     @Post('/logout')
     logout() {}
