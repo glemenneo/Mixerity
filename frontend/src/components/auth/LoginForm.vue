@@ -137,9 +137,6 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-.login-view {
-  height: 100vh;
-}
 .login-register-buttons {
   display: flex;
   justify-content: center;
