@@ -6,6 +6,7 @@ import {
     Param,
     Put,
     Body,
+    NotFoundException,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from 'src/common/guards/index';
@@ -16,9 +17,13 @@ import { EditProfileDto } from './dtos/index';
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) {}
 
-    @Get('/:id')
-    findProfile(@Param('uid') uid): Promise<Profile> {
-        return this.profileService.findOneByUid(uid);
+    @Get('/find/:uid')
+    async findProfile(@Param('uid') uid): Promise<Profile> {
+        const profile = await this.profileService.findOneByUid(uid);
+        if (!profile) {
+            throw new NotFoundException();
+        }
+        return profile;
     }
 
     @UseGuards(JwtAuthGuard)
