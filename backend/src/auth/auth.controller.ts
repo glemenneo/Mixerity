@@ -8,15 +8,16 @@ import {
     Request,
     Put,
     Get,
+    BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
     LocalAuthGuard,
     JwtAuthGuard,
     RefreshAuthGuard,
-} from 'src/common/guards/index';
-import { CreateUserDto, UpdatePasswordDto } from './dtos/index';
-import { User } from 'src/users/entities/index';
+} from 'src/common/guards';
+import { CreateUserDto, UpdatePasswordDto } from './dtos';
+import { User } from 'src/users/entities';
 import { COOKIE_OPTIONS } from 'src/common/constants/constants';
 
 @Controller('auth')
@@ -25,8 +26,20 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('/register')
-    register(@Body() dto: CreateUserDto): Promise<User> {
+    async register(@Body() dto: CreateUserDto): Promise<User> {
         const { email, username, password } = dto;
+        const emailExists = await this.authService.emailExists(email);
+        if (emailExists) {
+            throw new BadRequestException(
+                'An account with this email already exists!',
+            );
+        }
+        const usernameExists = await this.authService.usernameExists(username);
+        if (usernameExists) {
+            throw new BadRequestException(
+                'An account with this username already exists!',
+            );
+        }
         return this.authService.register(email, username, password);
     }
 

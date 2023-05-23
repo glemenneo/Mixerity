@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { User } from './entities/index';
+import { User } from './entities';
 import { ProfileService } from 'src/profile/profile.service';
 
 @Injectable()
@@ -55,19 +55,12 @@ export class UsersService {
 
     async update(uid: number, options: Partial<User>): Promise<User> {
         const user = await this.findOneByUid(uid);
-        if (!user) {
-            throw new NotFoundException();
-        }
-
         const updatedUser = Object.assign(user, options);
         return this.usersRepository.save(updatedUser);
     }
 
     async delete(uid: number): Promise<User> {
         let user = await this.findOneByUid(uid);
-        if (!user) {
-            throw new NotFoundException();
-        }
 
         const queryRunner = this.dataSource.createQueryRunner();
 

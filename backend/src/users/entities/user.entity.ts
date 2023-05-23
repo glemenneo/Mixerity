@@ -2,7 +2,6 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    CreateDateColumn,
     DeleteDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
@@ -23,8 +22,11 @@ export class User {
     password: string;
 
     @Exclude()
-    @CreateDateColumn()
-    created: Date;
+    @Column({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    created: string;
 
     @Exclude()
     @Column({ nullable: true })
