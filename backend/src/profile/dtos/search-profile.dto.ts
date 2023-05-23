@@ -1,6 +1,6 @@
 import { IsOptional, IsNumber, IsString } from 'class-validator';
 
-export class FindProfileDto {
+export class SearchProfileDto {
     @IsOptional()
     @IsNumber()
     uid: number;

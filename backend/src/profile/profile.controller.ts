@@ -29,8 +29,8 @@ export class ProfileController {
         return profile;
     }
 
-    @Post('/find')
-    findProfiles(@Body() dto: FindProfileDto): Promise<Profile[]> {
+    @Post('/search')
+    findProfiles(@Body() dto: SearchProfileDto): Promise<Profile[]> {
         return this.profileService.find(dto);
     }
 
