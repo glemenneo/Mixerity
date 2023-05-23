@@ -13,11 +13,16 @@ import {
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from 'src/common/guards';
 import { Profile } from './entities';
-import { EditProfileDto, FindProfileDto } from './dtos';
+import { EditProfileDto, SearchProfileDto } from './dtos';
 
 @Controller('profile')
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) {}
+
+    @Get('/all')
+    async getAll() {
+        return this.profileService.find({});
+    }
 
     @Get('/find/:uid')
     async getProfile(@Param('uid') uid): Promise<Profile> {
