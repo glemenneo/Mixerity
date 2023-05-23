@@ -21,10 +21,11 @@ export class ProfileController {
 
     @Get('/find/:uid')
     async findProfile(@Param('uid') uid): Promise<Profile> {
-        const profile = await this.profileService.findOneByUid(uid);
+        const profile = await this.profileService.findOneByUidEager(uid);
         if (!profile) {
             throw new NotFoundException();
         }
+
         return profile;
     }
 
@@ -40,16 +41,6 @@ export class ProfileController {
     editProfile(@Request() req, @Body() dto: EditProfileDto): Promise<Profile> {
         const uid = req.user.uid;
         return this.profileService.update(uid, dto);
-    }
-
-    @Get('/following/:uid')
-    async getFollowing(@Param('uid') uid: number): Promise<Profile[]> {
-        const profile = await this.profileService.findOneByUidEager(uid);
-        if (!profile) {
-            throw new NotFoundException();
-        }
-
-        return profile.following;
     }
 
     @UseGuards(JwtAuthGuard)
