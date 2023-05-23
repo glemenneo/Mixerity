@@ -8,26 +8,45 @@ import {
     Body,
     Put,
     BadRequestException,
+    Param,
+    NotFoundException,
+    Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/common/guards';
 import { User } from './entities';
-import { UpdateUserDto } from './dtos';
+import { SearchUserDto, UpdateUserDto } from './dtos';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @UseGuards(JwtAuthGuard)
-    @Get('/self')
-    getCurrentUser(@Request() req): Promise<User> {
-        return this.usersService.findOneByUid(req.user.uid);
+    @Get('/all')
+    getAll(@Param('uid') uid: number): Promise<User[]> {
+        return this.usersService.find({});
+    }
+
+    @Get('/get/:uid')
+    async getOne(@Param('uid') uid: number): Promise<User> {
+        const user = await this.usersService.findOneByUid(uid);
+        if (!user) {
+            throw new NotFoundException('No such user found.');
+        }
+        return user;
+    }
+
+    @Post('/search')
+    searchUser(@Body() dto: SearchUserDto): Promise<User[]> {
+        return this.usersService.find(dto);
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('/edit')
-    async editUser(@Request() req, @Body() dto: UpdateUserDto): Promise<User> {
+    @Put('/update')
+    async updateUser(
+        @Request() req,
+        @Body() dto: UpdateUserDto,
+    ): Promise<User> {
         const { email, username } = dto;
         const emailExists = await this.usersService.findOneByEmail(email);
         if (emailExists) {
