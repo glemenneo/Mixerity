@@ -22,19 +22,15 @@ export class ProfileService {
         return this.profileRepository.findOneBy({ uid });
     }
 
-    find(conditions: Partial<Profile>): Promise<Profile[]> {
-        return this.profileRepository.find({ where: conditions });
+    findOneByUidEager(uid: number): Promise<Profile | null> {
+        return this.profileRepository.findOne({
+            where: { uid },
+            relations: { following: true },
+        });
     }
 
-    async findFriends(uid: number): Promise<Profile[]> {
-        const profile = await this.findOneByUid(uid);
-        const { friends: friendUidsString } = profile;
-
-        const friendUids = JSON.parse(friendUidsString);
-        const friends = await Promise.all(
-            friendUids.map((uid) => this.findOneByUid(uid)),
-        );
-        return friends;
+    find(conditions: Partial<Profile>): Promise<Profile[]> {
+        return this.profileRepository.find({ where: conditions });
     }
 
     async update(uid: number, options: Partial<Profile>): Promise<Profile> {
@@ -54,5 +50,19 @@ export class ProfileService {
         }
 
         return this.profileRepository.remove(profile);
+    }
+
+    async follow(uid: number, otherProfile: Profile): Promise<Profile> {
+        const profile = await this.findOneByUidEager(uid);
+        profile.following = profile.following.concat([otherProfile]);
+        return this.profileRepository.save(profile);
+    }
+
+    async unFollow(uid: number, otherProfile: Profile): Promise<Profile> {
+        const profile = await this.findOneByUidEager(uid);
+        profile.following = profile.following.filter(
+            (following) => following !== profile,
+        );
+        return this.profileRepository.save(profile);
     }
 }
