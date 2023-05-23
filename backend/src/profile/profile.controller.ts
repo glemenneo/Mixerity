@@ -19,7 +19,7 @@ import { EditProfileDto } from './dtos';
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) {}
 
-    @Get('/:uid')
+    @Get('/find/:uid')
     async getProfile(@Param('uid') uid): Promise<Profile> {
         const profile = await this.profileService.findOneByUidEager(uid);
         if (!profile) {
