@@ -13,6 +13,7 @@ export enum AuthActions {
   LOGIN_USER = "LOGIN_USER",
   LOGOUT_USER = "LOGOUT_USER",
   REGISTER_USER = "REGISTER_USER",
+  GET_AUTH_USER = "GET_AUTH_USER",
 }
 
 export type AuthRes = {
@@ -31,7 +32,7 @@ export interface AxiosErrorData {
 }
 
 const getters: GetterTree<UsersState, RootState> = {
-  getAuthUser(state): AuthModel | null {
+  [AuthActions.GET_AUTH_USER](state): AuthModel | null {
     return state.authUser;
   },
   isUserAuth(state): boolean {
