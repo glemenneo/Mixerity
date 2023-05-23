@@ -55,19 +55,12 @@ export class UsersService {
 
     async update(uid: number, options: Partial<User>): Promise<User> {
         const user = await this.findOneByUid(uid);
-        if (!user) {
-            throw new NotFoundException();
-        }
-
         const updatedUser = Object.assign(user, options);
         return this.usersRepository.save(updatedUser);
     }
 
     async delete(uid: number): Promise<User> {
         let user = await this.findOneByUid(uid);
-        if (!user) {
-            throw new NotFoundException();
-        }
 
         const queryRunner = this.dataSource.createQueryRunner();
 

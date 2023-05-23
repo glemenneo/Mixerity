@@ -35,10 +35,6 @@ export class ProfileService {
 
     async update(uid: number, options: Partial<Profile>): Promise<Profile> {
         const profile = await this.findOneByUid(uid);
-        if (!profile) {
-            throw new NotFoundException();
-        }
-
         const updatedProfile = Object.assign(profile, options);
         return this.profileRepository.save(updatedProfile);
     }
