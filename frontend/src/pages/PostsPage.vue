@@ -1,10 +1,6 @@
 <template>
   <div class="page-view posts-page">
-    <el-container>
-      <el-header>
-        <h1>For You Page</h1>
-      </el-header>
-    </el-container>
+    <span class="header">Feed</span>
     <PostList />
   </div>
 </template>
@@ -26,5 +22,12 @@ export default class extends Vue {}
 .posts-page {
   height: max-content;
   background: #f8fafc;
+}
+.header {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  color: #cbd5e1;
 }
 </style>
