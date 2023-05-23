@@ -1,16 +1,18 @@
 import {
     Controller,
+    UseGuards,
     UseInterceptors,
     ClassSerializerInterceptor,
-    UseGuards,
     Get,
+    Post,
+    Put,
+    Delete,
+    Param,
     Request,
     Body,
-    Put,
     BadRequestException,
-    Param,
     NotFoundException,
-    Post,
+    ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/common/guards';
@@ -18,6 +20,7 @@ import { User } from './entities';
 import { SearchUserDto, UpdateUserDto } from './dtos';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
@@ -41,12 +44,16 @@ export class UsersController {
         return this.usersService.find(dto);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Put('/update')
+    @Put('/:uid')
     async updateUser(
+        @Param('uid') uid: number,
         @Request() req,
         @Body() dto: UpdateUserDto,
     ): Promise<User> {
+        if (req.user.uid != uid) {
+            throw new ForbiddenException('Not allowed to update user.');
+        }
+
         const { email, username } = dto;
         const emailExists = await this.usersService.findOneByEmail(email);
         if (emailExists) {
@@ -63,9 +70,12 @@ export class UsersController {
         return this.usersService.update(req.user.uid, dto);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Put('/delete')
-    deleteUser(@Request() req): Promise<User> {
+    @Delete('/:uid')
+    deleteUser(@Param('uid') uid: number, @Request() req): Promise<User> {
+        if (req.user.uid != uid) {
+            throw new ForbiddenException('Not allowed to delete user.');
+        }
+
         return this.usersService.delete(req.user.uid);
     }
 }
