@@ -1,52 +1,84 @@
 import {
     Controller,
+    UseGuards,
     UseInterceptors,
     ClassSerializerInterceptor,
-    UseGuards,
     Get,
+    Post,
+    Put,
+    Delete,
+    Param,
     Request,
     Body,
-    Put,
     BadRequestException,
+    NotFoundException,
+    ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/common/guards';
 import { User } from './entities';
-import { UpdateUserDto } from './dtos';
+import { SearchUserDto, UpdateUserDto } from './dtos';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @UseGuards(JwtAuthGuard)
-    @Get('/self')
-    getCurrentUser(@Request() req): Promise<User> {
-        return this.usersService.findOneByUid(req.user.uid);
+    @Get('/all')
+    getAll(): Promise<User[]> {
+        return this.usersService.find({});
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Put('/edit')
-    async editUser(@Request() req, @Body() dto: UpdateUserDto): Promise<User> {
+    @Get('/get/:uid')
+    async getOne(@Param('uid') uid: number): Promise<User> {
+        const user = await this.usersService.findOneByUid(uid);
+        if (!user) {
+            throw new NotFoundException('No such user found');
+        }
+        return user;
+    }
+
+    @Post('/search')
+    searchUsers(@Body() dto: SearchUserDto): Promise<User[]> {
+        return this.usersService.find(dto);
+    }
+
+    @Put('/:uid')
+    async updateUser(
+        @Param('uid') uid: number,
+        @Request() req,
+        @Body() dto: UpdateUserDto,
+    ): Promise<User> {
+        if (req.user.uid !== uid) {
+            throw new ForbiddenException('Not allowed to update user');
+        }
+        if (Object.entries(dto).length === 0) {
+            throw new BadRequestException('Empty request');
+        }
         const { email, username } = dto;
-        const emailExists = await this.usersService.findOneByEmail(email);
-        if (emailExists) {
-            throw new BadRequestException('Email is already in use!');
+        const emailTaken = await this.usersService.emailTaken(email);
+        if (emailTaken) {
+            throw new BadRequestException('Email is already in use');
+        }
+        const usenameTaken = await this.usersService.usernameTaken(username);
+        if (usenameTaken) {
+            throw new BadRequestException('Username is already in use');
         }
 
-        const usernameExists = await this.usersService.findOneByUsername(
-            username,
-        );
-        if (usernameExists) {
-            throw new BadRequestException('Username is already in use!');
-        }
-
-        return this.usersService.update(req.user.uid, dto);
+        return this.usersService.update(uid, dto);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Put('/delete')
-    deleteUser(@Request() req): Promise<User> {
+    @Delete('/:uid')
+    async deleteUser(@Param('uid') uid: number, @Request() req): Promise<User> {
+        const user = await this.usersService.findOneByUid(uid);
+        if (!user) {
+            throw new NotFoundException('No such user found');
+        }
+        if (req.user.uid != uid) {
+            throw new ForbiddenException('Not allowed to delete user');
+        }
+
         return this.usersService.delete(req.user.uid);
     }
 }

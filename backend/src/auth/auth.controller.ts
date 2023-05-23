@@ -28,17 +28,13 @@ export class AuthController {
     @Post('/register')
     async register(@Body() dto: CreateUserDto): Promise<User> {
         const { email, username, password } = dto;
-        const emailExists = await this.authService.emailExists(email);
-        if (emailExists) {
-            throw new BadRequestException(
-                'An account with this email already exists!',
-            );
+        const emailTaken = await this.authService.emailTaken(email);
+        if (emailTaken) {
+            throw new BadRequestException('Email is already in use');
         }
-        const usernameExists = await this.authService.usernameExists(username);
-        if (usernameExists) {
-            throw new BadRequestException(
-                'An account with this username already exists!',
-            );
+        const usernameTaken = await this.authService.usernameTaken(username);
+        if (usernameTaken) {
+            throw new BadRequestException('Username is already in use');
         }
         return this.authService.register(email, username, password);
     }

@@ -1,12 +1,17 @@
 import {
     IsOptional,
+    IsNumber,
     IsEmail,
     IsString,
-    IsNotEmpty,
     MaxLength,
+    IsNotEmpty,
 } from 'class-validator';
 
-export class UpdateUserDto {
+export class SearchUserDto {
+    @IsOptional()
+    @IsNumber()
+    uid: number;
+
     @IsOptional()
     @IsEmail()
     email: string;

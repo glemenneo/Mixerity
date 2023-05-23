@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/entities/index';
+import { User } from 'src/users/entities';
 
 @Injectable()
 export class AuthService {
@@ -51,7 +51,7 @@ export class AuthService {
             }
         }
 
-        throw new UnauthorizedException('Incorrect credentials!');
+        throw new UnauthorizedException('Incorrect password');
     }
 
     async login(
@@ -103,14 +103,12 @@ export class AuthService {
         return this.updateRefreshToken(uid, null);
     }
 
-    async emailExists(email: string): Promise<boolean> {
-        const user = await this.usersService.findOneByEmail(email);
-        return user !== null;
+    async emailTaken(email: string): Promise<boolean> {
+        return this.usersService.emailTaken(email);
     }
 
-    async usernameExists(username: string): Promise<boolean> {
-        const user = await this.usersService.findOneByUsername(username);
-        return user !== null;
+    async usernameTaken(username: string): Promise<boolean> {
+        return this.usersService.usernameTaken(username);
     }
 
     private static async hashAndSalt(password: string): Promise<string> {
