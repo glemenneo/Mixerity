@@ -204,7 +204,9 @@ export default class extends Vue {
     authRes.then((res) => {
       if (res.isSuccessful) {
         this.$message.success(res.message);
-        this.$router.push(`/`);
+        this.$router.push(`/`).catch(() => {
+          return;
+        });
       } else {
         this.$message.error(res.message);
       }
