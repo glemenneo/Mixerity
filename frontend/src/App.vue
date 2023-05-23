@@ -2,6 +2,7 @@
   <div class="app-body">
     <BaseNavMenu />
     <BaseMenu />
+    <router-view class="fade" />
   </div>
 </template>
 

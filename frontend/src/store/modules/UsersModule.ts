@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex, { ActionTree, GetterTree } from "vuex";
+import Vuex, { ActionTree, GetterTree, MutationTree } from "vuex";
 import { RootState } from "@/store/index";
 import { User } from "@/models/UserModel";
 
@@ -27,6 +27,14 @@ const getters: GetterTree<UsersState, RootState> = {
     (uid: number): User | undefined => {
       return state.users.find((user) => user.uid === uid);
     },
+};
+
+const mutations: MutationTree<UsersState> = {
+  [UsersActions.UPDATE_USER](state, payload: User): void {
+    state.users.filter((user) => user.uid !== payload.uid);
+    state.users.push(payload);
+    // To do: sync with backend
+  },
 };
 
 const actions: ActionTree<UsersState, RootState> = {
@@ -71,5 +79,6 @@ export default {
     users: [user1, user2, user3, user4],
   }),
   getters,
+  mutations,
   actions,
 };
