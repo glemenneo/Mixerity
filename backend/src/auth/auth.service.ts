@@ -22,19 +22,6 @@ export class AuthService {
         username: string,
         password: string,
     ): Promise<User> {
-        const emailExists = await this.emailExists(email);
-        if (emailExists) {
-            throw new BadRequestException(
-                'An account with this email already exists!',
-            );
-        }
-        const usernameExists = await this.usernameExists(username);
-        if (usernameExists) {
-            throw new BadRequestException(
-                'An account with this username already exists!',
-            );
-        }
-
         const hash = await AuthService.hashAndSalt(password);
         return this.usersService.create(email, username, hash);
     }
@@ -116,12 +103,12 @@ export class AuthService {
         return this.updateRefreshToken(uid, null);
     }
 
-    private async emailExists(email: string): Promise<boolean> {
+    async emailExists(email: string): Promise<boolean> {
         const user = await this.usersService.findOneByEmail(email);
         return user !== null;
     }
 
-    private async usernameExists(username: string): Promise<boolean> {
+    async usernameExists(username: string): Promise<boolean> {
         const user = await this.usersService.findOneByUsername(username);
         return user !== null;
     }
