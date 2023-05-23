@@ -50,7 +50,7 @@ export class UsersController {
         @Request() req,
         @Body() dto: UpdateUserDto,
     ): Promise<User> {
-        if (req.user.uid != uid) {
+        if (req.user.uid !== uid) {
             throw new ForbiddenException('Not allowed to update user');
         }
         if (Object.entries(dto).length === 0) {
