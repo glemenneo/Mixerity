@@ -26,7 +26,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Get('/all')
-    getAll(@Param('uid') uid: number): Promise<User[]> {
+    getAll(): Promise<User[]> {
         return this.usersService.find({});
     }
 
