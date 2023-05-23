@@ -53,7 +53,9 @@ export class UsersController {
         if (req.user.uid != uid) {
             throw new ForbiddenException('Not allowed to update user.');
         }
-
+        if (Object.entries(dto).length === 0) {
+            throw new BadRequestException('Empty request');
+        }
         const { email, username } = dto;
         const emailExists = await this.usersService.findOneByEmail(email);
         if (emailExists) {
