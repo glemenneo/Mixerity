@@ -9,7 +9,7 @@ import RegisterView from "@/components/auth/RegisterForm.vue";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
-  name: "LoginPage",
+  name: "RegisterPage",
   components: {
     RegisterView,
   },
