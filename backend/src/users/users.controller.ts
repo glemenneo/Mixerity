@@ -66,7 +66,7 @@ export class UsersController {
             throw new BadRequestException('Username is already in use');
         }
 
-        return this.usersService.update(req.user.uid, dto);
+        return this.usersService.update(uid, dto);
     }
 
     @Delete('/:uid')
