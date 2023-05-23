@@ -1,3 +1,5 @@
 <template>
-  <div class="page=-view">View All Followers</div>
+  <div class="page-view">
+    <h1>Followers Page</h1>
+  </div>
 </template>
