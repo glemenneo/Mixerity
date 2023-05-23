@@ -34,7 +34,7 @@ export class UsersController {
     async getOne(@Param('uid') uid: number): Promise<User> {
         const user = await this.usersService.findOneByUid(uid);
         if (!user) {
-            throw new NotFoundException('No such user found.');
+            throw new NotFoundException('No such user found');
         }
         return user;
     }
@@ -57,16 +57,13 @@ export class UsersController {
             throw new BadRequestException('Empty request');
         }
         const { email, username } = dto;
-        const emailExists = await this.usersService.findOneByEmail(email);
-        if (emailExists) {
-            throw new BadRequestException('Email is already in use!');
+        const emailTaken = await this.usersService.emailTaken(email);
+        if (emailTaken) {
+            throw new BadRequestException('Email is already in use');
         }
-
-        const usernameExists = await this.usersService.findOneByUsername(
-            username,
-        );
-        if (usernameExists) {
-            throw new BadRequestException('Username is already in use!');
+        const usenameTaken = await this.usersService.usernameTaken(username);
+        if (usenameTaken) {
+            throw new BadRequestException('Username is already in use');
         }
 
         return this.usersService.update(req.user.uid, dto);
@@ -75,7 +72,7 @@ export class UsersController {
     @Delete('/:uid')
     deleteUser(@Param('uid') uid: number, @Request() req): Promise<User> {
         if (req.user.uid != uid) {
-            throw new ForbiddenException('Not allowed to delete user.');
+            throw new ForbiddenException('Not allowed to delete user');
         }
 
         return this.usersService.delete(req.user.uid);
