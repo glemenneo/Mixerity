@@ -90,12 +90,12 @@ export class UsersService {
     }
 
     async emailTaken(email: string): Promise<boolean> {
-        const isTaken = (await this.findOneByEmail(email)) === null;
-        return isTaken;
+        const user = await this.findOneByEmail(email);
+        return user !== null;
     }
 
     async usernameTaken(username: string): Promise<boolean> {
-        const isTaken = (await this.findOneByUsername(username)) === null;
-        return isTaken;
+        const user = await this.findOneByUsername(username);
+        return user !== null;
     }
 }
