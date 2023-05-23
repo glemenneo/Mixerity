@@ -42,8 +42,8 @@ const routes: Array<RouteConfig> = [
     meta: { auth: true },
   },
   {
-    path: "/friends",
-    component: () => import("@/pages/FriendsPage.vue"),
+    path: "/followers",
+    component: () => import("@/pages/FollowersPage.vue"),
     meta: { auth: true },
   },
   {
