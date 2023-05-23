@@ -1,2 +1,2 @@
-export * from './edit-profile.dto';
+export * from './update-profile.dto';
 export * from './search-profile.dto';

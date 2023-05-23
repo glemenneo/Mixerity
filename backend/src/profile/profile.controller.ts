@@ -13,7 +13,7 @@ import {
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from 'src/common/guards';
 import { Profile } from './entities';
-import { EditProfileDto, SearchProfileDto } from './dtos';
+import { SearchProfileDto, UpdateProfileDto } from './dtos';
 
 @Controller('profile')
 @UseGuards(JwtAuthGuard)
@@ -39,9 +39,8 @@ export class ProfileController {
         return this.profileService.find(dto);
     }
 
-    @Put('/edit')
-    editProfile(@Request() req, @Body() dto: EditProfileDto): Promise<Profile> {
-        const uid = req.user.uid;
+        @Request() req,
+        @Body() dto: UpdateProfileDto,
         return this.profileService.update(uid, dto);
     }
 
