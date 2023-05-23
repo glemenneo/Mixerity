@@ -2,11 +2,12 @@ import Vue from "vue";
 import Vuex, { ActionTree, GetterTree, MutationTree } from "vuex";
 import { RootState } from "@/store/index";
 import AuthModel from "@/models/AuthModel";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { captitaliseEveryWord } from "@/utils/StringUtils";
 
 Vue.use(Vuex);
 
-const authUrl = "http://localhost:3000/auth/";
+const authPrefix = "auth/";
 
 export enum AuthActions {
   LOGIN_USER = "LOGIN_USER",
@@ -14,8 +15,19 @@ export enum AuthActions {
   REGISTER_USER = "REGISTER_USER",
 }
 
+export type AuthRes = {
+  isSuccessful: boolean;
+  message: string;
+};
+
 export interface UsersState {
   authUser: AuthModel | null;
+}
+
+export interface AxiosErrorData {
+  error: string;
+  message: string[];
+  statusCode: number;
 }
 
 const getters: GetterTree<UsersState, RootState> = {
@@ -38,17 +50,21 @@ const mutations: MutationTree<UsersState> = {
 };
 
 const actions: ActionTree<UsersState, RootState> = {
-  [AuthActions.LOGIN_USER](context, payload): Promise<boolean | undefined> {
+  [AuthActions.LOGIN_USER](context, payload): Promise<AuthRes | undefined> {
     const loginUser = async () => {
       try {
-        const res = await axios.post(`${authUrl}login`, payload);
+        const res = await axios.post(`${authPrefix}login`, payload);
         if (res.status === 201) {
           context.commit(AuthActions.LOGIN_USER, res.data);
-          return true;
+          const username = captitaliseEveryWord(res?.data?.username);
+          return {
+            isSuccessful: true,
+            message: `Welcome Back ${username}!`,
+          };
         }
       } catch (error) {
-        console.log("Error:", error);
-        return false;
+        console.log(error);
+        return { isSuccessful: false, message: "Login unsuccessful!" };
       }
     };
     return loginUser();
@@ -56,16 +72,29 @@ const actions: ActionTree<UsersState, RootState> = {
   [AuthActions.LOGOUT_USER](context): void {
     setTimeout(() => context.commit(AuthActions.LOGOUT_USER), 1000);
   },
-  [AuthActions.REGISTER_USER](_, payload): Promise<boolean | undefined> {
+  [AuthActions.REGISTER_USER](_, payload): Promise<AuthRes | undefined> {
+    let res: Response;
     const registerUser = async () => {
       try {
-        const res = await axios.post(`${authUrl}register`, payload);
+        res = await axios.post(`${authPrefix}register`, payload);
         if (res.status === 201) {
-          return true;
+          return {
+            isSuccessful: true,
+            message: `Registration successful! Please proceed to login.`,
+          };
         }
       } catch (error) {
         console.log("Error:", error);
-        return false;
+        const err = error as AxiosError;
+        const data = err.response?.data as AxiosErrorData;
+        const unsuccessfulMsg = data?.message[0];
+        console.log("unsuccessfulMsg:", data);
+        return {
+          isSuccessful: false,
+          message: captitaliseEveryWord(
+            unsuccessfulMsg || "Registration unsuccessful!"
+          ),
+        };
       }
     };
     return registerUser();
