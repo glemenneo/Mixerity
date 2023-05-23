@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from 'src/common/guards';
-import { FindProfileDto, Profile } from './entities';
-import { EditProfileDto } from './dtos';
+import { Profile } from './entities';
+import { EditProfileDto, FindProfileDto } from './dtos';
 
 @Controller('profile')
 export class ProfileController {
