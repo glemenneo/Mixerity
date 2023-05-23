@@ -40,7 +40,7 @@ export class UsersController {
     }
 
     @Post('/search')
-    searchUser(@Body() dto: SearchUserDto): Promise<User[]> {
+    searchUsers(@Body() dto: SearchUserDto): Promise<User[]> {
         return this.usersService.find(dto);
     }
 
