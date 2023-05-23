@@ -4,6 +4,8 @@ import {
     OneToOne,
     PrimaryColumn,
     CreateDateColumn,
+    ManyToMany,
+    JoinTable,
 } from 'typeorm';
 import { User } from 'src/users/entities/index';
 
@@ -22,8 +24,9 @@ export class Profile {
     @Column({ default: '' })
     bio: string;
 
-    @Column({ default: '[]' })
-    friends: string;
+    @ManyToMany((type) => Profile)
+    @JoinTable()
+    following: Profile[];
 
     @CreateDateColumn()
     created: Date;
