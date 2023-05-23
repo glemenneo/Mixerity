@@ -56,7 +56,7 @@ import { Vue, Component } from "vue-property-decorator";
 import { AuthActions } from "@/store/modules/AuthModule";
 
 @Component({
-  name: "LoginView",
+  name: "LoginForm",
 })
 export default class extends Vue {
   authForm = {
