@@ -24,13 +24,12 @@ export class ProfileController {
         return this.profileService.find({});
     }
 
-    @Get('/find/:uid')
-    async getProfile(@Param('uid') uid): Promise<Profile> {
+    @Get('/get/:uid')
+    async getOne(@Param('uid') uid): Promise<Profile> {
         const profile = await this.profileService.findOneByUidEager(uid);
         if (!profile) {
-            throw new NotFoundException();
+            throw new NotFoundException('No such profile found');
         }
-
         return profile;
     }
 
