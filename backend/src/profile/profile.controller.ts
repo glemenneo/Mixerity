@@ -28,8 +28,10 @@ export class ProfileController {
     }
 
     @Get('/get/:uid')
-    async getOne(@Param('uid') uid): Promise<Profile> {
-        const profile = await this.profileService.findOneByUidEager(uid);
+    async getOne(@Param('uid') uid: string): Promise<Profile> {
+        const profile = await this.profileService.findOneByUidEager(
+            parseInt(uid),
+        );
         if (!profile) {
             throw new NotFoundException('No such profile found');
         }
@@ -43,18 +45,18 @@ export class ProfileController {
 
     @Put('/:uid')
     updateProfile(
-        @Param('uid') uid: number,
+        @Param('uid') uid: string,
         @Request() req,
         @Body() dto: UpdateProfileDto,
     ): Promise<Profile> {
-        if (req.user.uid !== uid) {
+        if (req.user.uid !== parseInt(uid)) {
             throw new ForbiddenException('Not allowed to update user');
         }
         if (Object.entries(dto).length === 0) {
             throw new BadRequestException('Empty request');
         }
 
-        return this.profileService.update(uid, dto);
+        return this.profileService.update(req.user.uid, dto);
     }
 
     @Post('/follow/:uid')
