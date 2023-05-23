@@ -198,7 +198,7 @@ export default class extends Vue {
 
   handleRegisterButtonClick(): void {
     const authRes: Promise<AuthRes> = this.$store.dispatch(
-      `auth/${AuthActions.LOGIN_USER}`,
+      `auth/${AuthActions.REGISTER_USER}`,
       this.authForm
     );
     authRes.then((res) => {
