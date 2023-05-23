@@ -56,7 +56,7 @@ body {
   margin-left: var(--base-nav-menu-width);
   padding: 20px;
   padding-right: 25px;
-  height: 100vh;
+  height: calc(100vh - var(--base-menu-height));
 }
 ::-webkit-scrollbar {
   width: 8px;
