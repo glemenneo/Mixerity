@@ -4,6 +4,7 @@ import { RootState } from "@/store/index";
 import { User } from "@/models/UserModel";
 import axios, { AxiosError } from "axios";
 import { AxiosErrorData } from "./AuthModule";
+import { captitaliseEveryWord } from "@/utils/StringUtils";
 
 Vue.use(Vuex);
 
@@ -18,6 +19,11 @@ export enum UsersActions {
 
 export interface UsersState {
   users: Array<User>;
+}
+
+export interface ApiRes {
+  isSuccessful: boolean;
+  message: string;
 }
 
 const getters: GetterTree<UsersState, RootState> = {
@@ -60,34 +66,54 @@ const actions: ActionTree<UsersState, RootState> = {
     user();
     return undefined;
   },
+  [UsersActions.UPDATE_USER](_, payload: User): Promise<ApiRes | undefined> {
+    const updateUser = async () => {
+      try {
+        const res = await axios.put(`${usersPrefix}${payload.uid}`, payload);
+        if (res.status === 200) {
+          console.log(res.data);
+          return {
+            isSuccessful: true,
+            message: captitaliseEveryWord(res.data?.message || "User updated."),
+          };
+        }
+      } catch (error) {
+        const err = error as AxiosError;
+        const errData = err.response?.data as AxiosErrorData;
+        const msg = errData?.message[0];
+        console.log(msg);
+        return {
+          isSuccessful: false,
+          message: captitaliseEveryWord(msg || "User not updated."),
+        };
+      }
+    };
+    return updateUser();
+  },
 };
 
 const user1: User = {
   uid: 1,
   username: "jjeremiah",
-  profilePicUrl: "https://picsum.photos/200?random=1",
-  following: [2, 3],
+  email: "jeremiah@gmail.com",
 };
 
 const user2: User = {
   uid: 2,
   username: "benderhenderson",
-  profilePicUrl: "https://picsum.photos/200?random=2",
-  following: [1],
+  email: "henderson@gmail.com",
 };
 
 const user3: User = {
   uid: 3,
   username: "marieeeantoinette",
-  profilePicUrl: "https://picsum.photos/200?random=3",
-  following: [1, 4],
+  email: "marieanne@gmail.com",
 };
 
 const user4: User = {
   uid: 4,
   username: "xxhaileebaileeninetysixs",
-  profilePicUrl: "https://picsum.photos/200?random=4",
-  following: [3],
+  email: "haileebailey@gmail.com",
 };
 
 export default {
