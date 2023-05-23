@@ -38,14 +38,23 @@ export class UsersService {
     }
 
     findOneByUid(uid: number): Promise<User | null> {
+        if (!uid) {
+            return null;
+        }
         return this.usersRepository.findOneBy({ uid });
     }
 
     findOneByEmail(email: string): Promise<User | null> {
+        if (!email) {
+            return null;
+        }
         return this.usersRepository.findOneBy({ email });
     }
 
     findOneByUsername(username: string): Promise<User | null> {
+        if (!username) {
+            return null;
+        }
         return this.usersRepository.findOneBy({ username });
     }
 
