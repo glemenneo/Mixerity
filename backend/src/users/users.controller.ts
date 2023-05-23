@@ -51,7 +51,7 @@ export class UsersController {
         @Body() dto: UpdateUserDto,
     ): Promise<User> {
         if (req.user.uid != uid) {
-            throw new ForbiddenException('Not allowed to update user.');
+            throw new ForbiddenException('Not allowed to update user');
         }
         if (Object.entries(dto).length === 0) {
             throw new BadRequestException('Empty request');
@@ -70,7 +70,11 @@ export class UsersController {
     }
 
     @Delete('/:uid')
-    deleteUser(@Param('uid') uid: number, @Request() req): Promise<User> {
+    async deleteUser(@Param('uid') uid: number, @Request() req): Promise<User> {
+        const user = await this.usersService.findOneByUid(uid);
+        if (!user) {
+            throw new NotFoundException('No such user found');
+        }
         if (req.user.uid != uid) {
             throw new ForbiddenException('Not allowed to delete user');
         }
