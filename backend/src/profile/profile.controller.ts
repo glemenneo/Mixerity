@@ -9,6 +9,8 @@ import {
     NotFoundException,
     Post,
     Delete,
+    ForbiddenException,
+    BadRequestException,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from 'src/common/guards';
@@ -35,12 +37,27 @@ export class ProfileController {
     }
 
     @Post('/search')
-    findProfiles(@Body() dto: SearchProfileDto): Promise<Profile[]> {
+    findProfiles(
+        @Param('uid') uid: number,
+        @Request() req,
+        @Body() dto: SearchProfileDto,
+    ): Promise<Profile[]> {
         return this.profileService.find(dto);
     }
 
+    @Put('/:uid')
+    updateProfile(
+        @Param('uid') uid: number,
         @Request() req,
         @Body() dto: UpdateProfileDto,
+    ): Promise<Profile> {
+        if (req.user.uid !== uid) {
+            throw new ForbiddenException('Not allowed to update user');
+        }
+        if (Object.entries(dto).length === 0) {
+            throw new BadRequestException('Empty request');
+        }
+
         return this.profileService.update(uid, dto);
     }
 
