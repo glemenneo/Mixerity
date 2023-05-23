@@ -15,9 +15,9 @@ import {
     LocalAuthGuard,
     JwtAuthGuard,
     RefreshAuthGuard,
-} from 'src/common/guards/index';
-import { CreateUserDto, UpdatePasswordDto } from './dtos/index';
-import { User } from 'src/users/entities/index';
+} from 'src/common/guards';
+import { CreateUserDto, UpdatePasswordDto } from './dtos';
+import { User } from 'src/users/entities';
 import { COOKIE_OPTIONS } from 'src/common/constants/constants';
 
 @Controller('auth')

@@ -9,12 +9,11 @@ import {
     NotFoundException,
     Post,
     Delete,
-    BadRequestException,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
-import { JwtAuthGuard } from 'src/common/guards/index';
-import { Profile } from './entities/index';
-import { EditProfileDto } from './dtos/index';
+import { JwtAuthGuard } from 'src/common/guards';
+import { Profile } from './entities';
+import { EditProfileDto } from './dtos';
 
 @Controller('profile')
 export class ProfileController {
