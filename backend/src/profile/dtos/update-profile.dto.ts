@@ -4,7 +4,7 @@ export class UpdateProfileDto {
     @IsString()
     @IsNotEmpty()
     @IsOptional()
-    displayname: string;
+    displayName: string;
 
     @IsUrl()
     @IsOptional()
