@@ -19,13 +19,9 @@
         <template v-slot:title>
           <i class="el-icon-user"></i>
         </template>
-        <el-menu-item index="displaySettings"
-          ><span class="el-icon-user"></span>
-          Display Settings
-        </el-menu-item>
-        <el-menu-item index="accountSettings">
+        <el-menu-item index="profileSettings">
           <span class="el-icon-setting"></span>
-          Account Settings
+          Profile Settings
         </el-menu-item>
         <el-menu-item :index="isUserAuth ? 'logout' : 'login'"
           ><span

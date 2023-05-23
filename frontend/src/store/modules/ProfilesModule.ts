@@ -4,11 +4,11 @@ import { RootState } from "@/store/index";
 import { User } from "@/models/UserModel";
 import axios, { AxiosError } from "axios";
 import { AxiosErrorData } from "./AuthModule";
-import { captitaliseEveryWord } from "@/utils/StringUtils";
+import Profile from "@/models/ProfileModel";
 
 Vue.use(Vuex);
 
-const usersPrefix = "users/";
+const profilesPrefix = "profiles/";
 
 export enum UsersActions {
   ADD_USER = "ADD_USER",
@@ -51,7 +51,7 @@ const actions: ActionTree<UsersState, RootState> = {
   [UsersActions.GET_USER_BY_ID](_, uid): User | undefined {
     const user = async () => {
       try {
-        const res = await axios.get(`${usersPrefix}get/${uid}`);
+        const res = await axios.get(`${profilesPrefix}get/${uid}`);
         if (res.status === 200) {
           return res.data;
         }
@@ -66,54 +66,34 @@ const actions: ActionTree<UsersState, RootState> = {
     user();
     return undefined;
   },
-  [UsersActions.UPDATE_USER](_, payload: User): Promise<ApiRes | undefined> {
-    const updateUser = async () => {
-      try {
-        const res = await axios.put(`${usersPrefix}${payload.uid}`, payload);
-        if (res.status === 200) {
-          console.log(res.data);
-          return {
-            isSuccessful: true,
-            message: captitaliseEveryWord(res.data?.message || "User updated."),
-          };
-        }
-      } catch (error) {
-        const err = error as AxiosError;
-        const errData = err.response?.data as AxiosErrorData;
-        const msg = errData?.message[0];
-        console.log(msg);
-        return {
-          isSuccessful: false,
-          message: captitaliseEveryWord(msg || "User not updated."),
-        };
-      }
-    };
-    return updateUser();
-  },
 };
 
-const user1: User = {
+const user1: Profile = {
   uid: 1,
-  username: "jjeremiah",
-  email: "jeremiah@gmail.com",
+  displayName: "jjeremiah",
+  profilePicUrl: "https://picsum.photos/200?random=1",
+  following: [2, 3],
 };
 
-const user2: User = {
+const user2: Profile = {
   uid: 2,
-  username: "benderhenderson",
-  email: "henderson@gmail.com",
+  displayName: "benderhenderson",
+  profilePicUrl: "https://picsum.photos/200?random=2",
+  following: [1],
 };
 
-const user3: User = {
+const user3: Profile = {
   uid: 3,
-  username: "marieeeantoinette",
-  email: "marieanne@gmail.com",
+  displayName: "marieeeantoinette",
+  profilePicUrl: "https://picsum.photos/200?random=3",
+  following: [1, 4],
 };
 
-const user4: User = {
+const user4: Profile = {
   uid: 4,
-  username: "xxhaileebaileeninetysixs",
-  email: "haileebailey@gmail.com",
+  displayName: "xxhaileebaileeninetysixs",
+  profilePicUrl: "https://picsum.photos/200?random=4",
+  following: [3],
 };
 
 export default {
