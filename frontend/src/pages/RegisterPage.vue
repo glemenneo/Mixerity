@@ -16,3 +16,10 @@ import { Vue, Component } from "vue-property-decorator";
 })
 export default class extends Vue {}
 </script>
+
+<style>
+.register-page {
+  height: 100%;
+  background: #f8fafc;
+}
+</style>
