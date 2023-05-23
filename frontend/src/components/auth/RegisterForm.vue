@@ -76,7 +76,7 @@ import { AuthActions } from "@/store/modules/AuthModule";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
-  name: "RegisterView",
+  name: "RegisterForm",
 })
 export default class extends Vue {
   authForm = {
