@@ -12,21 +12,26 @@ import {
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from 'src/common/guards';
-import { Profile } from './entities';
+import { FindProfileDto, Profile } from './entities';
 import { EditProfileDto } from './dtos';
 
 @Controller('profile')
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) {}
 
-    @Get('/find/:uid')
-    async findProfile(@Param('uid') uid): Promise<Profile> {
+    @Get('/:uid')
+    async getProfile(@Param('uid') uid): Promise<Profile> {
         const profile = await this.profileService.findOneByUidEager(uid);
         if (!profile) {
             throw new NotFoundException();
         }
 
         return profile;
+    }
+
+    @Post('/find')
+    findProfiles(@Body() dto: FindProfileDto): Promise<Profile[]> {
+        return this.profileService.find(dto);
     }
 
     @UseGuards(JwtAuthGuard)
