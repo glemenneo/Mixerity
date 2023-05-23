@@ -28,9 +28,9 @@
       >
         <template v-slot:title>
           <i class="el-icon-chat-dot-round"></i>
-          <span>Friends</span>
+          <span>Followers</span>
         </template>
-        <el-menu-item index="/friends">View All Friends</el-menu-item>
+        <el-menu-item index="/followers">View All Followers</el-menu-item>
       </el-submenu>
       <el-menu-item index="/home">
         <i class="el-icon-headset"></i>
