@@ -12,7 +12,12 @@
           <template v-slot:image>
             <img
               :src="post.imgUrl"
-              style="position: absolute; height: 100%; width: 100%"
+              style="
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                border-radius: 22px;
+              "
             />
             <el-button @click="handleImageClick(post)" />
             <ExpandedPostImage
@@ -141,10 +146,7 @@ export default class extends Vue {
   font-size: 14px;
   font-family: Helvetica, Arial, sans-serif;
   white-space: pre-line;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 10px;
   padding: 10px;
   border-radius: 10px;
   color: #64748b;
