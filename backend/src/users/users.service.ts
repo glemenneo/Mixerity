@@ -88,4 +88,14 @@ export class UsersService {
 
         return user;
     }
+
+    async emailTaken(email: string): Promise<boolean> {
+        const isTaken = (await this.findOneByEmail(email)) === null;
+        return isTaken;
+    }
+
+    async usernameTaken(username: string): Promise<boolean> {
+        const isTaken = (await this.findOneByUsername(username)) === null;
+        return isTaken;
+    }
 }
