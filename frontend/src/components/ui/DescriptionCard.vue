@@ -52,6 +52,7 @@ export default class extends Vue {
 }
 .box-card {
   position: relative;
+  border-top-right-radius: 25px;
 }
 .tags-container {
   display: flex;
