@@ -1,6 +1,5 @@
-export type User = {
+export interface User {
   uid?: number;
-  username: string;
-  profilePicUrl: string;
-  friends: number[];
-};
+  email?: string;
+  username?: string;
+}
