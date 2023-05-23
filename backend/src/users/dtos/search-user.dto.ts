@@ -1,4 +1,11 @@
-import { IsOptional, IsNumber, IsEmail, IsString, MaxLength } from 'class-validator';
+import {
+    IsOptional,
+    IsNumber,
+    IsEmail,
+    IsString,
+    MaxLength,
+    IsNotEmpty,
+} from 'class-validator';
 
 export class SearchUserDto {
     @IsOptional()
@@ -11,6 +18,7 @@ export class SearchUserDto {
 
     @IsOptional()
     @IsString()
+    @IsNotEmpty()
     @MaxLength(255)
     username: string;
 }
