@@ -71,10 +71,12 @@
 </template>
 
 <script lang="ts">
+import { AuthRes } from "@/store/modules/AuthModule";
+import { AuthActions } from "@/store/modules/AuthModule";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
-  name: "RegisterView",
+  name: "RegisterForm",
 })
 export default class extends Vue {
   authForm = {
@@ -195,8 +197,20 @@ export default class extends Vue {
   };
 
   handleRegisterButtonClick(): void {
-    // this.$store.dispatch("auth/login", this.authForm);
-    console.log("Register button clicked");
+    const authRes: Promise<AuthRes> = this.$store.dispatch(
+      `auth/${AuthActions.REGISTER_USER}`,
+      this.authForm
+    );
+    authRes.then((res) => {
+      if (res.isSuccessful) {
+        this.$message.success(res.message);
+        this.$router.push(`/`).catch(() => {
+          return;
+        });
+      } else {
+        this.$message.error(res.message);
+      }
+    });
   }
 
   handleLoginButtonClick(): void {
@@ -206,9 +220,6 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-.register-view {
-  height: 100vh;
-}
 .login-register-buttons {
   display: flex;
   justify-content: center;

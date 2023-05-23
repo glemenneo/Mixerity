@@ -9,12 +9,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/posts",
     name: "posts",
-    component: () => import("@/components/posts/PostList.vue"),
-    meta: { auth: true },
-  },
-  {
-    path: "/posts/:id",
-    component: () => import("@/components/posts/PostDetails.vue"),
+    component: () => import("@/pages/PostsPage.vue"),
     meta: { auth: true },
   },
   {
@@ -31,13 +26,13 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "login",
-    component: () => import("@/components/auth/LoginView.vue"),
+    component: () => import("@/pages/LoginPage.vue"),
     meta: { auth: false },
   },
   {
     path: "/register",
     name: "register",
-    component: () => import("@/components/auth/RegisterView.vue"),
+    component: () => import("@/pages/RegisterPage.vue"),
     meta: { auth: false },
   },
   {
@@ -47,8 +42,8 @@ const routes: Array<RouteConfig> = [
     meta: { auth: true },
   },
   {
-    path: "/friends",
-    component: () => import("@/pages/FriendsPage.vue"),
+    path: "/followers",
+    component: () => import("@/pages/FollowersPage.vue"),
     meta: { auth: true },
   },
   {
@@ -61,6 +56,7 @@ const routes: Array<RouteConfig> = [
     path: "/*",
     name: "notFound",
     component: () => import("@/pages/NotFoundPage.vue"),
+    meta: { auth: false },
   },
 ];
 
@@ -80,7 +76,10 @@ router.beforeEach((to, from, next) => {
     return false;
   } else if (to.meta.auth && !store.getters["auth/isUserAuth"]) {
     next({ path: "/login" });
-  } else if (!to.meta.auth && store.getters["auth/isUserAuth"]) {
+  } else if (
+    store.getters["auth/isUserAuth"] &&
+    (to.path === "/login" || to.path === "/register")
+  ) {
     next({ path: "/posts" });
   } else {
     next();

@@ -56,7 +56,7 @@ import { Vue, Component } from "vue-property-decorator";
 import { AuthActions } from "@/store/modules/AuthModule";
 
 @Component({
-  name: "LoginView",
+  name: "LoginForm",
 })
 export default class extends Vue {
   authForm = {
@@ -108,23 +108,24 @@ export default class extends Vue {
 
   handleLoginButtonClick(): void {
     const user = this.authForm;
-    console.log("user: ", user);
     const isLoginSuccessful = this.$store.dispatch(
       `auth/${AuthActions.LOGIN_USER}`,
       user
     );
     isLoginSuccessful.then((res) => {
-      if (!res) {
+      if (!res.isSuccessful) {
         this.$message({
-          message: "Login failed, please try again",
+          message: res.message,
           type: "error",
         });
       } else {
         this.$message({
-          message: "Login successful!",
+          message: res.message,
           type: "success",
         });
-        setTimeout(() => this.$router.push(`/posts`), 1000);
+        this.$router.push(`/posts`).catch(() => {
+          return;
+        });
       }
     });
   }
@@ -136,9 +137,6 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-.login-view {
-  height: 100vh;
-}
 .login-register-buttons {
   display: flex;
   justify-content: center;

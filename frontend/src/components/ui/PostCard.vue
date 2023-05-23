@@ -24,18 +24,26 @@
   </div>
 </template>
 
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+
+@Component({
+  name: "PostCard",
+})
+export default class extends Vue {}
+</script>
 <style scoped>
 .card {
   margin: auto;
-  margin-top: 4vh;
-  margin-bottom: 0;
+  margin-top: 1vh;
+  margin-bottom: 5vh;
   padding: 5px;
   border: 1px solid #e2e8f0;
-  box-shadow: 2px 2px 1px #f8fafc;
+  box-shadow: 3px 3px 15px 5px #cbd5e195;
   height: 80vh;
   width: 50vw;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 25px;
 }
 .el-col {
   height: 80vh;
