@@ -1,14 +1,19 @@
 <template>
   <div class="page-view profile-settings-page">
-    <span class="header">Profile Settings</span>
+    <span class="header">Update Profile</span>
+    <ProfileSettingsForm />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import ProfileSettingsForm from "@/components/profile-settings/ProfileSettingsForm.vue";
 
 @Component({
   name: "ProfileSettingsPage",
+  components: {
+    ProfileSettingsForm,
+  },
 })
 export default class extends Vue {}
 </script>
