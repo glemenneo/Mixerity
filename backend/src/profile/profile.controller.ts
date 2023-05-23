@@ -39,7 +39,6 @@ export class ProfileController {
     @Post('/search')
     findProfiles(
         @Param('uid') uid: number,
-        @Request() req,
         @Body() dto: SearchProfileDto,
     ): Promise<Profile[]> {
         return this.profileService.find(dto);
