@@ -16,6 +16,7 @@ import { Profile } from './entities';
 import { EditProfileDto, SearchProfileDto } from './dtos';
 
 @Controller('profile')
+@UseGuards(JwtAuthGuard)
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) {}
 
@@ -38,21 +39,12 @@ export class ProfileController {
         return this.profileService.find(dto);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Get('/self')
-    getOwnProfile(@Request() req): Promise<Profile> {
-        const { uid } = req.user;
-        return this.profileService.findOneByUidEager(uid);
-    }
-
-    @UseGuards(JwtAuthGuard)
     @Put('/edit')
     editProfile(@Request() req, @Body() dto: EditProfileDto): Promise<Profile> {
         const uid = req.user.uid;
         return this.profileService.update(uid, dto);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Post('/follow/:uid')
     async follow(
         @Request() req,
@@ -66,7 +58,6 @@ export class ProfileController {
         return this.profileService.follow(req.user.uid, otherProfile);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Delete('/unFollow/:uid')
     async unFollow(
         @Request() req,
