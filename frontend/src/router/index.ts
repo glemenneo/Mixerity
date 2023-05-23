@@ -42,6 +42,12 @@ const routes: Array<RouteConfig> = [
     meta: { auth: true },
   },
   {
+    path: "/profileSettings",
+    name: "profileSettings",
+    component: () => import("@/pages/ProfileSettings.vue"),
+    meta: { auth: true },
+  },
+  {
     path: "/followers",
     component: () => import("@/pages/FollowersPage.vue"),
     meta: { auth: true },
