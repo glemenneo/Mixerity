@@ -24,6 +24,14 @@
   </div>
 </template>
 
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+
+@Component({
+  name: "PostCard",
+})
+export default class extends Vue {}
+</script>
 <style scoped>
 .card {
   margin: auto;
