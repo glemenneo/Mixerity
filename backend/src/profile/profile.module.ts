@@ -3,7 +3,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfileController } from './profile.controller';
 import { ProfileService } from './profile.service';
-import { Profile } from './entities/profile.entity';
+import { Profile } from './entities/index';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Profile])],

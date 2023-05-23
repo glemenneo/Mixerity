@@ -5,7 +5,7 @@ import {
     PrimaryColumn,
     CreateDateColumn,
 } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/index';
 
 @Entity()
 export class Profile {

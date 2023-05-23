@@ -8,9 +8,9 @@ import {
     Body,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { Profile } from './entities/profile.entity';
-import { EditProfileDto } from './dtos/edit-profile.dto';
+import { JwtAuthGuard } from 'src/common/guards/index';
+import { Profile } from './entities/index';
+import { EditProfileDto } from './dtos/index';
 
 @Controller('profile')
 export class ProfileController {

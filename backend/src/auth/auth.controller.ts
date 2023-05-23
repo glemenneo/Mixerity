@@ -10,13 +10,14 @@ import {
     Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from 'src/users/entities/user.entity';
-import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import {
+    LocalAuthGuard,
+    JwtAuthGuard,
+    RefreshAuthGuard,
+} from 'src/common/guards/index';
+import { CreateUserDto, UpdatePasswordDto } from './dtos/index';
+import { User } from 'src/users/entities/index';
 import { COOKIE_OPTIONS } from 'src/common/constants/constants';
-import { UpdatePasswordDto } from './dtos/update-password.dto';
-import { RefreshAuthGuard } from 'src/common/guards/refresh.auth.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
