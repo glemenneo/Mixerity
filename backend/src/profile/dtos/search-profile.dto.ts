@@ -1,9 +1,9 @@
-import { IsOptional, IsNumber, IsString } from 'class-validator';
+import { IsOptional, IsUUID, IsString } from 'class-validator';
 
 export class SearchProfileDto {
     @IsOptional()
-    @IsNumber()
-    uid: number;
+    @IsUUID()
+    uid: string;
 
     @IsOptional()
     @IsString()

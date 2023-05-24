@@ -31,7 +31,7 @@ export class UsersController {
     }
 
     @Get('/get/:uid')
-    async getOne(@Param('uid') uid: number): Promise<User> {
+    async getOne(@Param('uid') uid: string): Promise<User> {
         const user = await this.usersService.findOneByUid(uid);
         if (!user) {
             throw new NotFoundException('No such user found');
@@ -46,7 +46,7 @@ export class UsersController {
 
     @Put('/:uid')
     async updateUser(
-        @Param('uid') uid: number,
+        @Param('uid') uid: string,
         @Request() req,
         @Body() dto: UpdateUserDto,
     ): Promise<User> {
@@ -70,7 +70,7 @@ export class UsersController {
     }
 
     @Delete('/:uid')
-    async deleteUser(@Param('uid') uid: number, @Request() req): Promise<User> {
+    async deleteUser(@Param('uid') uid: string, @Request() req): Promise<User> {
         const user = await this.usersService.findOneByUid(uid);
         if (!user) {
             throw new NotFoundException('No such user found');

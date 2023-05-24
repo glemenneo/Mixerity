@@ -1,43 +1,30 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { User } from './entities';
 import { ProfileService } from 'src/profile/profile.service';
+import { Profile } from 'src/profile/entities';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User) private usersRepository: Repository<User>,
-        private dataSource: DataSource,
-        private readonly profileService: ProfileService,
     ) {}
 
     async create(email, username, password): Promise<User> {
+        const uid = uuidv4();
         let user = this.usersRepository.create({
+            uid,
             email,
             username,
             password,
+            profile: new Profile({ uid, displayName: username }),
         });
-
-        const queryRunner = this.dataSource.createQueryRunner();
-
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            user = await queryRunner.manager.save(user);
-            await this.profileService.create(user.uid, username);
-            await queryRunner.commitTransaction();
-        } catch (err) {
-            await queryRunner.rollbackTransaction();
-            throw err;
-        } finally {
-            await queryRunner.release();
-        }
-
-        return user;
+        return this.usersRepository.save(user);
     }
 
-    findOneByUid(uid: number): Promise<User | null> {
+    findOneByUid(uid: string): Promise<User | null> {
         if (!uid) {
             return null;
         }
@@ -62,31 +49,18 @@ export class UsersService {
         return this.usersRepository.find({ where: conditions });
     }
 
-    async update(uid: number, options: Partial<User>): Promise<User> {
+    async update(uid: string, options: Partial<User>): Promise<User> {
         const user = await this.findOneByUid(uid);
         const updatedUser = Object.assign(user, options);
         return this.usersRepository.save(updatedUser);
     }
 
-    async delete(uid: number): Promise<User> {
-        let user = await this.findOneByUid(uid);
-
-        const queryRunner = this.dataSource.createQueryRunner();
-
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            user = await this.usersRepository.remove(user);
-            await this.profileService.delete(user.uid);
-            await queryRunner.commitTransaction();
-        } catch (err) {
-            await queryRunner.rollbackTransaction();
-            throw err;
-        } finally {
-            await queryRunner.release();
-        }
-
-        return user;
+    async delete(uid: string): Promise<User> {
+        const user = await this.usersRepository.findOne({
+            where: { uid },
+            relations: { profile: true },
+        });
+        return this.usersRepository.remove(user);
     }
 
     async emailTaken(email: string): Promise<boolean> {

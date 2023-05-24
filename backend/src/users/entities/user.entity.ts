@@ -2,14 +2,17 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
+    OneToOne,
+    JoinColumn,
     DeleteDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Profile } from 'src/profile/entities';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn('increment')
-    uid: number;
+    @PrimaryGeneratedColumn('uuid')
+    uid: string;
 
     @Column({ unique: true })
     email: string;
@@ -31,6 +34,12 @@ export class User {
     @Exclude()
     @Column({ nullable: true })
     refreshToken: string;
+
+    @OneToOne((type) => Profile, (profile) => profile.user, {
+        cascade: true,
+    })
+    @JoinColumn()
+    profile: Profile;
 
     // Soft delete column
     // @Exclude()

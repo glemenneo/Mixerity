@@ -1,19 +1,20 @@
 import {
     Entity,
     Column,
-    OneToOne,
-    PrimaryColumn,
-    CreateDateColumn,
     ManyToMany,
+    OneToOne,
     JoinTable,
+    PrimaryColumn,
 } from 'typeorm';
 import { User } from 'src/users/entities/index';
 
 @Entity()
 export class Profile {
     @PrimaryColumn()
-    @OneToOne((type) => User, (user) => user.uid)
-    uid: number;
+    uid: string;
+
+    @OneToOne((type) => User, (user) => user.profile)
+    user: User;
 
     @Column()
     displayName: string;
@@ -24,12 +25,21 @@ export class Profile {
     @Column({ default: '' })
     bio: string;
 
-    @ManyToMany((type) => Profile)
-    @JoinTable()
-    following: Profile[];
+    @ManyToMany((type) => Profile, (profile) => profile.following)
+    followers: Profile[];
 
-    @CreateDateColumn()
-    created: Date;
+    @ManyToMany((type) => Profile, (profile) => profile.followers, {
+        cascade: true,
+    })
+    @JoinTable({
+        name: 'following_followers',
+        joinColumn: { name: 'follower', referencedColumnName: 'uid' },
+        inverseJoinColumn: {
+            name: 'followed',
+            referencedColumnName: 'uid',
+        },
+    })
+    following: Profile[];
 
     constructor(partial: Partial<Profile>) {
         Object.assign(this, partial);

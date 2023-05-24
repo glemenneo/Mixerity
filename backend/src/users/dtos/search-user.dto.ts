@@ -1,6 +1,6 @@
 import {
     IsOptional,
-    IsNumber,
+    IsUUID,
     IsEmail,
     IsString,
     MaxLength,
@@ -9,8 +9,8 @@ import {
 
 export class SearchUserDto {
     @IsOptional()
-    @IsNumber()
-    uid: number;
+    @IsUUID()
+    uid: string;
 
     @IsOptional()
     @IsEmail()

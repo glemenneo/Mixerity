@@ -65,7 +65,7 @@ export class AuthService {
         return { accessToken, refreshToken };
     }
 
-    async validateAccessToken(uid: number): Promise<User> {
+    async validateAccessToken(uid: string): Promise<User> {
         const user = await this.usersService.findOneByUid(uid);
         if (!user) {
             throw new UnauthorizedException('Invalid JWT!');
@@ -74,17 +74,17 @@ export class AuthService {
         return user;
     }
 
-    async updatePassword(uid: number, password: string): Promise<User> {
+    async updatePassword(uid: string, password: string): Promise<User> {
         const hash = await AuthService.hashAndSalt(password);
         return this.usersService.update(uid, { uid, password: hash });
     }
 
-    deleteUser(uid: number): Promise<User> {
+    deleteUser(uid: string): Promise<User> {
         return this.usersService.delete(uid);
     }
 
     async validateRefreshToken(
-        uid: number,
+        uid: string,
         refreshToken,
     ): Promise<User | null> {
         const user = await this.usersService.findOneByUid(uid);
@@ -95,11 +95,11 @@ export class AuthService {
         return user;
     }
 
-    refreshAccessToken(uid: number): Promise<String> {
+    refreshAccessToken(uid: string): Promise<String> {
         return this.generateAccessToken(uid);
     }
 
-    logout(uid: number): Promise<User> {
+    logout(uid: string): Promise<User> {
         return this.updateRefreshToken(uid, null);
     }
 
@@ -118,7 +118,7 @@ export class AuthService {
         return hash;
     }
 
-    private async generateAccessToken(uid: number): Promise<string> {
+    private async generateAccessToken(uid: string): Promise<string> {
         const payload = { sub: uid };
         const options = {
             secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -129,7 +129,7 @@ export class AuthService {
         return refreshToken;
     }
 
-    private async generateRefreshToken(uid: number): Promise<string> {
+    private async generateRefreshToken(uid: string): Promise<string> {
         const payload = { sub: uid };
         const options = {
             secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -141,7 +141,7 @@ export class AuthService {
     }
 
     private updateRefreshToken(
-        uid: number,
+        uid: string,
         refreshToken: string | null,
     ): Promise<User> {
         return this.usersService.update(uid, { uid, refreshToken });

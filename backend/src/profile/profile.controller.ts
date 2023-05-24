@@ -29,9 +29,7 @@ export class ProfileController {
 
     @Get('/get/:uid')
     async getOne(@Param('uid') uid: string): Promise<Profile> {
-        const profile = await this.profileService.findOneByUidEager(
-            parseInt(uid),
-        );
+        const profile = await this.profileService.findOneByUidEager(uid);
         if (!profile) {
             throw new NotFoundException('No such profile found');
         }
@@ -49,7 +47,7 @@ export class ProfileController {
         @Request() req,
         @Body() dto: UpdateProfileDto,
     ): Promise<Profile> {
-        if (req.user.uid !== parseInt(uid)) {
+        if (req.user.uid !== uid) {
             throw new ForbiddenException('Not allowed to update user');
         }
         if (Object.entries(dto).length === 0) {
@@ -62,7 +60,7 @@ export class ProfileController {
     @Post('/follow/:uid')
     async follow(
         @Request() req,
-        @Param('uid') otherUid: number,
+        @Param('uid') otherUid: string,
     ): Promise<Profile> {
         const otherProfile = await this.profileService.findOneByUid(otherUid);
         if (!otherProfile) {
@@ -75,7 +73,7 @@ export class ProfileController {
     @Delete('/unFollow/:uid')
     async unFollow(
         @Request() req,
-        @Param('uid') otherUid: number,
+        @Param('uid') otherUid: string,
     ): Promise<Profile> {
         const otherProfile = await this.profileService.findOneByUid(otherUid);
         if (!otherProfile) {

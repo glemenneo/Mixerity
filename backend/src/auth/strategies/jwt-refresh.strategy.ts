@@ -23,10 +23,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
         });
     }
 
-    validate(
-        req: Request,
-        payload: { sub: number; email: string },
-    ): Promise<User> {
+    validate(req: Request, payload: { sub: string }): Promise<User> {
         const { sub: uid } = payload;
         const refreshToken =
             JwtRefreshStrategy.extractRefreshTokenFromCookies(req);

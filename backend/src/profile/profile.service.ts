@@ -10,19 +10,11 @@ export class ProfileService {
         private profileRepository: Repository<Profile>,
     ) {}
 
-    create(uid: number, displayName: string): Promise<Profile> {
-        const profile = this.profileRepository.create({
-            uid,
-            displayName,
-        });
-        return this.profileRepository.save(profile);
-    }
-
-    findOneByUid(uid: number): Promise<Profile | null> {
+    findOneByUid(uid: string): Promise<Profile | null> {
         return this.profileRepository.findOneBy({ uid });
     }
 
-    findOneByUidEager(uid: number): Promise<Profile | null> {
+    async findOneByUidEager(uid: string): Promise<Profile | null> {
         return this.profileRepository.findOne({
             where: { uid },
             relations: { following: true },
@@ -33,13 +25,14 @@ export class ProfileService {
         return this.profileRepository.find({ where: conditions });
     }
 
-    async update(uid: number, options: Partial<Profile>): Promise<Profile> {
+    async update(uid: string, options: Partial<Profile>): Promise<Profile> {
         const profile = await this.findOneByUid(uid);
         const updatedProfile = Object.assign(profile, options);
+
         return this.profileRepository.save(updatedProfile);
     }
 
-    async delete(uid: number): Promise<Profile> {
+    async delete(uid: string): Promise<Profile> {
         const profile = await this.findOneByUid(uid);
         if (!profile) {
             throw new NotFoundException();
@@ -48,13 +41,14 @@ export class ProfileService {
         return this.profileRepository.remove(profile);
     }
 
-    async follow(uid: number, otherProfile: Profile): Promise<Profile> {
+    async follow(uid: string, otherProfile: Profile): Promise<Profile> {
         const profile = await this.findOneByUidEager(uid);
+
         profile.following = profile.following.concat([otherProfile]);
         return this.profileRepository.save(profile);
     }
 
-    async unFollow(uid: number, otherProfile: Profile): Promise<Profile> {
+    async unFollow(uid: string, otherProfile: Profile): Promise<Profile> {
         const profile = await this.findOneByUidEager(uid);
         profile.following = profile.following.filter(
             (following) => following !== profile,
