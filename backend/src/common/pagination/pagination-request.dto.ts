@@ -5,8 +5,9 @@ import {
     IsString,
     IsOptional,
     Min,
+    ValidateIf,
 } from 'class-validator';
-import { OrderBy } from '../constants/constants.enum';
+import { OrderBy, UserColumns } from '../constants/constants.enum';
 
 export class PaginationRequestDto {
     @IsDefined()
@@ -21,15 +22,15 @@ export class PaginationRequestDto {
 
     @IsOptional()
     @IsString()
-    searchString: string;
+    search_string: string;
 
-    @IsOptional()
-    @IsString()
+    @ValidateIf((dto) => typeof dto.order_by !== 'undefined')
+    @IsEnum(UserColumns)
     column: string;
 
-    @IsOptional()
+    @ValidateIf((dto) => typeof dto.column !== 'undefined')
     @IsEnum(OrderBy)
-    orderBy: OrderBy;
+    order_by: OrderBy;
 
     constructor(partial: Partial<PaginationRequestDto>) {
         Object.assign(this, partial);
