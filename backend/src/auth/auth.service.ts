@@ -28,8 +28,8 @@ export class AuthService {
 
     async validateUser(username: string, password: string): Promise<User> {
         const users = await Promise.all([
-            this.usersService.findOneByEmail(username),
-            this.usersService.findOneByUsername(username),
+            this.usersService.getOneByEmail(username),
+            this.usersService.getOneByUsername(username),
         ]);
 
         const userExists = users.reduce(
@@ -66,7 +66,7 @@ export class AuthService {
     }
 
     async validateAccessToken(uid: string): Promise<User> {
-        const user = await this.usersService.findOneByUid(uid);
+        const user = await this.usersService.getOneByUid(uid);
         if (!user) {
             throw new UnauthorizedException('Invalid JWT!');
         }
@@ -87,7 +87,7 @@ export class AuthService {
         uid: string,
         refreshToken,
     ): Promise<User | null> {
-        const user = await this.usersService.findOneByUid(uid);
+        const user = await this.usersService.getOneByUid(uid);
         if (!user || !user.refreshToken || user.refreshToken !== refreshToken) {
             throw new UnauthorizedException('Invalid refresh JWT!');
         }
@@ -95,7 +95,7 @@ export class AuthService {
         return user;
     }
 
-    refreshAccessToken(uid: string): Promise<String> {
+    refreshAccessToken(uid: string): Promise<string> {
         return this.generateAccessToken(uid);
     }
 
