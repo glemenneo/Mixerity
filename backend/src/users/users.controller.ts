@@ -8,6 +8,7 @@ import {
     Delete,
     Param,
     Request,
+    Query,
     Body,
     BadRequestException,
     NotFoundException,
@@ -26,7 +27,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Get()
-    getUsers(@Body() dto: PaginationRequestDto): Promise<[User[], number]> {
+    getUsers(@Query() dto: PaginationRequestDto): Promise<[User[], number]> {
         return this.usersService.paginate(dto);
     }
 

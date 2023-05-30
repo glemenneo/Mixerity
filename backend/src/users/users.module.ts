@@ -14,6 +14,8 @@ import { ProfileModule } from 'src/profile/profile.module';
         {
             provide: APP_PIPE,
             useValue: new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
                 whitelist: true,
             }),
         },
