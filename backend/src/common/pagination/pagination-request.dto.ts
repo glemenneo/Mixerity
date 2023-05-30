@@ -12,16 +12,16 @@ export class PaginationRequestDto {
     @IsDefined()
     @IsNumber()
     @Min(0)
-    take: number;
+    limit: number;
 
     @IsDefined()
     @IsNumber()
     @Min(0)
-    skip: number;
+    offset: number;
 
     @IsOptional()
     @IsString()
-    search_string: string;
+    searchString: string;
 
     @IsOptional()
     @IsString()
