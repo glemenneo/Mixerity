@@ -31,14 +31,7 @@ export class Profile {
     @ManyToMany((type) => Profile, (profile) => profile.followers, {
         cascade: true,
     })
-    @JoinTable({
-        name: 'following_followers',
-        joinColumn: { name: 'follower', referencedColumnName: 'uid' },
-        inverseJoinColumn: {
-            name: 'followed',
-            referencedColumnName: 'uid',
-        },
-    })
+    @JoinTable()
     following: Profile[];
 
     constructor(partial: Partial<Profile>) {
