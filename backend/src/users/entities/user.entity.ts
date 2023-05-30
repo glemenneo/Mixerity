@@ -1,6 +1,6 @@
 import {
     Entity,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
     Column,
     OneToOne,
     JoinColumn,
@@ -11,7 +11,7 @@ import { Profile } from 'src/profile/entities';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryColumn('uuid')
     uid: string;
 
     @Column({ unique: true })
