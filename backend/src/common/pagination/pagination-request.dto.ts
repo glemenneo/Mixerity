@@ -7,7 +7,7 @@ import {
     Min,
     ValidateIf,
 } from 'class-validator';
-import { OrderBy, UserColumns } from '../constants/constants.enum';
+import { OrderBy } from '../constants/constants.enum';
 
 export class PaginationRequestDto {
     @IsDefined()
