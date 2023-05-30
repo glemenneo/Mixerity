@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -46,14 +46,16 @@ export class UsersService {
     }
 
     paginate(dto: PaginationRequestDto): Promise<[User[], number]> {
-        const { limit, offset, column, orderBy, searchString } = dto;
+        const { limit, offset, column, order_by, search_string } = dto;
         const query = this.usersRepository.createQueryBuilder('user');
-        if (searchString) {
-            query.where('username LIKE :search', { search: searchString });
+        if (search_string) {
+            query.where('username LIKE :search', {
+                search: `%${search_string}%`,
+            });
         }
         query.take(limit).skip(offset);
-        if (column && orderBy) {
-            query.orderBy(column, orderBy);
+        if (column && order_by) {
+            query.orderBy(column, order_by);
         }
         return query.getManyAndCount();
     }
