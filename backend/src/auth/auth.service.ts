@@ -6,8 +6,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/entities';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/entities';
+import { UpdatePasswordDto } from './dtos';
 
 @Injectable()
 export class AuthService {
@@ -74,8 +75,14 @@ export class AuthService {
         return user;
     }
 
-    async updatePassword(uid: string, password: string): Promise<User> {
-        const hash = await AuthService.hashAndSalt(password);
+    async updatePassword(
+        uid: string,
+        username: string,
+        dto: UpdatePasswordDto,
+    ): Promise<User> {
+        const { old_password, new_password } = dto;
+        await this.validateUser(username, old_password);
+        const hash = await AuthService.hashAndSalt(new_password);
         return this.usersService.update(uid, { uid, password: hash });
     }
 

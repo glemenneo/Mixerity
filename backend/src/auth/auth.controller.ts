@@ -67,9 +67,8 @@ export class AuthController {
         @Request() req,
         @Body() dto: UpdatePasswordDto,
     ): Promise<User> {
-        const { uid } = req.user;
-        const { password } = dto;
-        return this.authService.updatePassword(uid, password);
+        const { uid, username } = req.user;
+        return this.authService.updatePassword(uid, username, dto);
     }
 
     @UseGuards(RefreshAuthGuard)
