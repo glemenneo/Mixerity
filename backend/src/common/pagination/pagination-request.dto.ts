@@ -25,7 +25,7 @@ export class PaginationRequestDto {
     search_string: string;
 
     @ValidateIf((dto) => typeof dto.order_by !== 'undefined')
-    @IsEnum(UserColumns)
+    @IsString()
     column: string;
 
     @ValidateIf((dto) => typeof dto.column !== 'undefined')

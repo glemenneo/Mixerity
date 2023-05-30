@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from './entities';
 import { Profile } from '../profile/entities';
 import { PaginationRequestDto } from '../common/pagination';
+import { UserColumns } from 'src/common/constants';
 
 @Injectable()
 export class UsersService {
@@ -55,6 +56,9 @@ export class UsersService {
         }
         query.take(limit).skip(offset);
         if (column && order_by) {
+            if (Object.values(UserColumns).includes(column as UserColumns)) {
+                throw new BadRequestException('Invalid column');
+            }
             query.orderBy(column, order_by);
         }
         return query.getManyAndCount();
