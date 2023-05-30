@@ -38,7 +38,9 @@ export class ProfileService {
         query.take(limit).skip(offset);
         if (column && order_by) {
             if (
-                Object.values(ProfileColumns).includes(column as ProfileColumns)
+                !Object.values(ProfileColumns).includes(
+                    column as ProfileColumns,
+                )
             ) {
                 throw new BadRequestException('Invalid column');
             }

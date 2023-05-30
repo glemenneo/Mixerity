@@ -56,7 +56,7 @@ export class UsersService {
         }
         query.take(limit).skip(offset);
         if (column && order_by) {
-            if (Object.values(UserColumns).includes(column as UserColumns)) {
+            if (!Object.values(UserColumns).includes(column as UserColumns)) {
                 throw new BadRequestException('Invalid column');
             }
             query.orderBy(column, order_by);
