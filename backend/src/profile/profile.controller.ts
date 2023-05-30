@@ -9,36 +9,35 @@ import {
     NotFoundException,
     Post,
     Delete,
+    Query,
     ForbiddenException,
     BadRequestException,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
-import { JwtAuthGuard } from 'src/common/guards';
+import { JwtAuthGuard } from '../common/guards';
 import { Profile } from './entities';
-import { SearchProfileDto, UpdateProfileDto } from './dtos';
+import { UpdateProfileDto } from './dtos';
+import { PaginationRequestDto } from '../common/pagination';
 
 @Controller('profile')
 @UseGuards(JwtAuthGuard)
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) {}
 
-    @Get('/all')
-    async getAll() {
-        return this.profileService.find({});
+    @Get()
+    async getProfiles(
+        @Query() dto: PaginationRequestDto,
+    ): Promise<[Profile[], number]> {
+        return this.profileService.paginate(dto);
     }
 
-    @Get('/get/:uid')
+    @Get('/:uid')
     async getOne(@Param('uid') uid: string): Promise<Profile> {
         const profile = await this.profileService.findOneByUidEager(uid);
         if (!profile) {
             throw new NotFoundException('No such profile found');
         }
         return profile;
-    }
-
-    @Post('/search')
-    searchProfiles(@Body() dto: SearchProfileDto): Promise<Profile[]> {
-        return this.profileService.find(dto);
     }
 
     @Put('/:uid')

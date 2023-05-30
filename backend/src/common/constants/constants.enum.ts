@@ -9,3 +9,8 @@ export enum UserColumns {
     USERNAME = 'username',
     CREATED = 'created',
 }
+
+export enum ProfileColumns {
+    UID = 'uid',
+    DISPLAYNAME = 'displayName',
+}

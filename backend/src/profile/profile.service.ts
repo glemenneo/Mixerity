@@ -1,7 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    Injectable,
+    NotFoundException,
+    BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Profile } from './entities';
+import { PaginationRequestDto } from 'src/common/pagination';
+import { ProfileColumns } from '../common/constants';
 
 @Injectable()
 export class ProfileService {
@@ -21,8 +27,24 @@ export class ProfileService {
         });
     }
 
-    find(conditions: Partial<Profile>): Promise<Profile[]> {
-        return this.profileRepository.find({ where: conditions });
+    paginate(dto: PaginationRequestDto): Promise<[Profile[], number]> {
+        const { limit, offset, column, order_by, search_string } = dto;
+        const query = this.profileRepository.createQueryBuilder('profile');
+        if (search_string) {
+            query.where('displayName LIKE :search', {
+                search: `%${search_string}%`,
+            });
+        }
+        query.take(limit).skip(offset);
+        if (column && order_by) {
+            if (
+                Object.values(ProfileColumns).includes(column as ProfileColumns)
+            ) {
+                throw new BadRequestException('Invalid column');
+            }
+            query.orderBy(column, order_by);
+        }
+        return query.getManyAndCount();
     }
 
     async update(uid: string, options: Partial<Profile>): Promise<Profile> {
@@ -51,7 +73,7 @@ export class ProfileService {
     async unFollow(uid: string, otherProfile: Profile): Promise<Profile> {
         const profile = await this.findOneByUidEager(uid);
         profile.following = profile.following.filter(
-            (following) => following !== profile,
+            (following) => following !== otherProfile,
         );
         return this.profileRepository.save(profile);
     }
