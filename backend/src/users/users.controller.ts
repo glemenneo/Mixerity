@@ -4,7 +4,6 @@ import {
     UseInterceptors,
     ClassSerializerInterceptor,
     Get,
-    Post,
     Put,
     Delete,
     Param,
@@ -15,9 +14,10 @@ import {
     ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { JwtAuthGuard } from 'src/common/guards';
+import { JwtAuthGuard } from '../common/guards';
 import { User } from './entities';
-import { SearchUserDto, UpdateUserDto } from './dtos';
+import { UpdateUserDto } from './dtos';
+import { PaginationRequestDto } from '../common/pagination';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -25,23 +25,18 @@ import { SearchUserDto, UpdateUserDto } from './dtos';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Get('/all')
-    getAll(): Promise<User[]> {
-        return this.usersService.find({});
+    @Get()
+    getUsers(@Body() dto: PaginationRequestDto): Promise<[User[], number]> {
+        return this.usersService.paginate(dto);
     }
 
-    @Get('/get/:uid')
-    async getOne(@Param('uid') uid: string): Promise<User> {
-        const user = await this.usersService.findOneByUid(uid);
+    @Get('/:uid')
+    async getOneUser(@Param('uid') uid: string): Promise<User> {
+        const user = await this.usersService.getOneByUid(uid);
         if (!user) {
             throw new NotFoundException('No such user found');
         }
         return user;
-    }
-
-    @Post('/search')
-    searchUsers(@Body() dto: SearchUserDto): Promise<User[]> {
-        return this.usersService.find(dto);
     }
 
     @Put('/:uid')
@@ -71,7 +66,7 @@ export class UsersController {
 
     @Delete('/:uid')
     async deleteUser(@Param('uid') uid: string, @Request() req): Promise<User> {
-        const user = await this.usersService.findOneByUid(uid);
+        const user = await this.usersService.getOneByUid(uid);
         if (!user) {
             throw new NotFoundException('No such user found');
         }
