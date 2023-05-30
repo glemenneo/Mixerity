@@ -18,7 +18,7 @@ import {
 } from 'src/common/guards';
 import { CreateUserDto, UpdatePasswordDto } from './dtos';
 import { User } from 'src/users/entities';
-import { COOKIE_OPTIONS } from 'src/common/constants/constants';
+import { COOKIE_OPTIONS } from 'src/common/constants';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
