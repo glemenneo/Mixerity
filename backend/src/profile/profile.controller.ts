@@ -70,7 +70,7 @@ export class ProfileController {
         return this.profileService.follow(req.user.uid, otherProfile);
     }
 
-    @Delete('/unFollow/:uid')
+    @Delete('/unfollow/:uid')
     async unFollow(
         @Request() req,
         @Param('uid') otherUid: string,
