@@ -12,12 +12,12 @@ export class PaginationRequestDto {
     @IsDefined()
     @IsNumber()
     @Min(0)
-    limit: number;
+    offset: number;
 
     @IsDefined()
     @IsNumber()
-    @Min(0)
-    offset: number;
+    @Min(1)
+    limit: number;
 
     @IsOptional()
     @IsString()
