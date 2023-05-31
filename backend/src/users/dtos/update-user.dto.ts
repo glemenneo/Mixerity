@@ -18,8 +18,9 @@ export class UpdateUserDto {
     @MaxLength(255)
     username: string;
 
-    toEntity(): User {
+    toEntity(uid: string): User {
         const user = new User();
+        user.uid = uid;
         user.email = this.email;
         user.username = this.username;
         return user;

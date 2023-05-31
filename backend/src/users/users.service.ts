@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from './entities';
-import { Profile } from '../profile/entities';
 import { PaginationRequestDto } from '../common/pagination';
 import { UserColumns } from '../common/constants';
 import { CreateUserDto } from '../auth/dtos';
+import { UpdateUserDto } from './dtos';
 
 @Injectable()
 export class UsersService {
@@ -59,10 +59,9 @@ export class UsersService {
         return query.getManyAndCount();
     }
 
-    async update(uid: string, options: Partial<User>): Promise<User> {
-        const user = await this.getOneByUid(uid);
-        const updatedUser = Object.assign(user, options);
-        return this.usersRepository.save(updatedUser);
+    async update(uid: string, dto: UpdateUserDto): Promise<User> {
+        const user = dto.toEntity(uid);
+        return this.usersRepository.save(user);
     }
 
     async delete(uid: string): Promise<User> {
