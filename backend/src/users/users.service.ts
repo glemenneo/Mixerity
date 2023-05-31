@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from './entities';
 import { Profile } from '../profile/entities';
 import { PaginationRequestDto } from '../common/pagination';
-import { UserColumns } from 'src/common/constants';
+import { UserColumns } from '../common/constants';
+import { CreateUserDto } from '../auth/dtos';
 
 @Injectable()
 export class UsersService {
@@ -13,18 +14,9 @@ export class UsersService {
         @InjectRepository(User) private usersRepository: Repository<User>,
     ) {}
 
-    async create(email, username, password): Promise<User> {
+    async create(dto: CreateUserDto): Promise<User> {
         const uid = uuidv4();
-        const profile = new Profile();
-        profile.uid = uid;
-        profile.displayName = username;
-        const user = this.usersRepository.create({
-            uid,
-            email,
-            username,
-            password,
-            profile,
-        });
+        const user = dto.toEntity(uid);
         return this.usersRepository.save(user);
     }
 

@@ -36,7 +36,7 @@ export class AuthController {
         if (usernameTaken) {
             throw new ConflictException('Username is already in use');
         }
-        return this.authService.register(email, username, password);
+        return this.authService.register(dto);
     }
 
     @UseGuards(LocalAuthGuard)

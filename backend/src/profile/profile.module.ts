@@ -13,6 +13,7 @@ import { Profile } from './entities';
         {
             provide: APP_PIPE,
             useValue: new ValidationPipe({
+                transform: true,
                 whitelist: true,
             }),
         },

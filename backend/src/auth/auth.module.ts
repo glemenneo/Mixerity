@@ -22,6 +22,7 @@ import { JwtRefreshStrategy, JwtStrategy, LocalStrategy } from './strategies';
         {
             provide: APP_PIPE,
             useValue: new ValidationPipe({
+                transform: true,
                 whitelist: true,
             }),
         },

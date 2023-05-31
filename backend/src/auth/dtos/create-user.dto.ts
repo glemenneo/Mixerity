@@ -6,6 +6,7 @@ import {
     IsDefined,
 } from 'class-validator';
 import { User } from '../../users/entities';
+import { Profile } from '../../profile/entities';
 
 export class CreateUserDto {
     @IsDefined()
@@ -23,11 +24,16 @@ export class CreateUserDto {
     @MinLength(8)
     password: string;
 
-    toEntity(): User {
+    toEntity(uid: string): User {
         const user = new User();
+        user.uid = uid;
         user.email = this.email;
         user.username = this.username;
         user.password = this.password;
+        const profile = new Profile();
+        profile.uid = uid;
+        profile.displayName = this.username;
+        user.profile = profile;
         return user;
     }
 }
