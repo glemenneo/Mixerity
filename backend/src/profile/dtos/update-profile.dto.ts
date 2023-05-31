@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsUrl, IsNotEmpty } from 'class-validator';
+import { Profile } from '../entities';
 
 export class UpdateProfileDto {
     @IsString()
@@ -13,4 +14,12 @@ export class UpdateProfileDto {
     @IsString()
     @IsOptional()
     bio: string;
+
+    toEntity(): Profile {
+        const profile = new Profile();
+        profile.displayName = this.displayName;
+        profile.profilePicUrl = this.profilePicUrl;
+        profile.bio = this.bio;
+        return profile;
+    }
 }

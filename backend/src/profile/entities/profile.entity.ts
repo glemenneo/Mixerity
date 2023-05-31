@@ -33,8 +33,4 @@ export class Profile {
     })
     @JoinTable()
     following: Profile[];
-
-    constructor(partial: Partial<Profile>) {
-        Object.assign(this, partial);
-    }
 }

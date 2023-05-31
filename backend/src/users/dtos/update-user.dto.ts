@@ -5,6 +5,7 @@ import {
     IsNotEmpty,
     MaxLength,
 } from 'class-validator';
+import { User } from '../entities';
 
 export class UpdateUserDto {
     @IsOptional()
@@ -16,4 +17,11 @@ export class UpdateUserDto {
     @IsNotEmpty()
     @MaxLength(255)
     username: string;
+
+    toEntity(): User {
+        const user = new User();
+        user.email = this.email;
+        user.username = this.username;
+        return user;
+    }
 }

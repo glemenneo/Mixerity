@@ -45,8 +45,4 @@ export class User {
     // @Exclude()
     // @DeleteDateColumn({ nullable: true })
     // deletedDate: Date;
-
-    constructor(partial: Partial<User>) {
-        Object.assign(this, partial);
-    }
 }

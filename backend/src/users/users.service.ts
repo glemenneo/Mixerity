@@ -15,12 +15,15 @@ export class UsersService {
 
     async create(email, username, password): Promise<User> {
         const uid = uuidv4();
+        const profile = new Profile();
+        profile.uid = uid;
+        profile.displayName = username;
         const user = this.usersRepository.create({
             uid,
             email,
             username,
             password,
-            profile: new Profile({ uid, displayName: username }),
+            profile,
         });
         return this.usersRepository.save(user);
     }
