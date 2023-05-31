@@ -18,6 +18,8 @@ import { JwtAuthGuard } from '../common/guards';
 import { Profile } from './entities';
 import { UpdateProfileDto } from './dtos';
 import { PaginationRequestDto } from '../common/pagination';
+import { CurrentUser } from '../common/decorators';
+import { User } from '../users/entities';
 
 @Controller('profile')
 @UseGuards(JwtAuthGuard)
@@ -43,42 +45,42 @@ export class ProfileController {
     @Put('/:uid')
     updateProfile(
         @Param('uid') uid: string,
-        @Request() req,
         @Body() dto: UpdateProfileDto,
+        @CurrentUser() user: User,
     ): Promise<Profile> {
-        if (req.user.uid !== uid) {
+        if (user.uid !== uid) {
             throw new ForbiddenException('Not allowed to update user');
         }
         if (Object.entries(dto).length === 0) {
             throw new BadRequestException('Empty request');
         }
 
-        return this.profileService.update(req.user.uid, dto);
+        return this.profileService.update(user.uid, dto);
     }
 
     @Post('/follow/:uid')
     async follow(
-        @Request() req,
         @Param('uid') otherUid: string,
+        @CurrentUser() user: User,
     ): Promise<Profile> {
         const otherProfile = await this.profileService.findOneByUid(otherUid);
         if (!otherProfile) {
             throw new NotFoundException();
         }
 
-        return this.profileService.follow(req.user.uid, otherProfile);
+        return this.profileService.follow(user.uid, otherProfile);
     }
 
     @Delete('/unfollow/:uid')
     async unFollow(
-        @Request() req,
         @Param('uid') otherUid: string,
+        @CurrentUser() user: User,
     ): Promise<Profile> {
         const otherProfile = await this.profileService.findOneByUid(otherUid);
         if (!otherProfile) {
             throw new NotFoundException();
         }
 
-        return this.profileService.unFollow(req.user.uid, otherProfile);
+        return this.profileService.unFollow(user.uid, otherProfile);
     }
 }

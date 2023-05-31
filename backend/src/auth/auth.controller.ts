@@ -18,6 +18,7 @@ import {
 } from 'src/common/guards';
 import { CreateUserDto, UpdatePasswordDto } from './dtos';
 import { User } from 'src/users/entities';
+import { CurrentUser } from 'src/common/decorators';
 import { COOKIE_OPTIONS } from 'src/common/constants';
 
 @Controller('auth')
@@ -41,20 +42,20 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('/login')
-    async login(@Request() req): Promise<User> {
+    async login(@Request() req, @CurrentUser() user: User): Promise<User> {
         const { accessToken, refreshToken } = await this.authService.login(
-            req.user,
+            user,
         );
         req.res.cookie('access-token', accessToken, COOKIE_OPTIONS);
         req.res.cookie('refresh-token', refreshToken, COOKIE_OPTIONS);
 
-        return req.user;
+        return user;
     }
 
     @UseGuards(JwtAuthGuard)
     @Post('/logout')
-    async logout(@Request() req): Promise<void> {
-        await this.authService.logout(req.user.uid);
+    async logout(@Request() req, @CurrentUser() user: User): Promise<void> {
+        await this.authService.logout(user.uid);
         req.res.clearCookie('access-token');
         req.res.clearCookie('refresh-token');
     }
@@ -62,20 +63,23 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Put('/password')
     async updatePassword(
-        @Request() req,
         @Body() dto: UpdatePasswordDto,
+        @CurrentUser() user: User,
     ): Promise<User> {
-        const { uid, username } = req.user;
+        const { uid, username } = user;
         return this.authService.updatePassword(uid, username, dto);
     }
 
     @UseGuards(RefreshAuthGuard)
     @Get('/refresh')
-    async refreshAccessToken(@Request() req): Promise<User> {
-        const { uid } = req.user;
+    async refreshAccessToken(
+        @Request() req,
+        @CurrentUser() user: User,
+    ): Promise<{ accessToken: string }> {
+        const { uid } = user;
         const accessToken = await this.authService.refreshAccessToken(uid);
 
         req.res.cookie('access-token', accessToken, COOKIE_OPTIONS);
-        return req.user;
+        return { accessToken };
     }
 }

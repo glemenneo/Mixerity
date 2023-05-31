@@ -7,7 +7,6 @@ import {
     Put,
     Delete,
     Param,
-    Request,
     Query,
     Body,
     BadRequestException,
@@ -19,6 +18,7 @@ import { JwtAuthGuard } from '../common/guards';
 import { User } from './entities';
 import { UpdateUserDto } from './dtos';
 import { PaginationRequestDto } from '../common/pagination';
+import { CurrentUser } from '../common/decorators';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -43,10 +43,10 @@ export class UsersController {
     @Put('/:uid')
     async updateUser(
         @Param('uid') uid: string,
-        @Request() req,
         @Body() dto: UpdateUserDto,
+        @CurrentUser() user: User,
     ): Promise<User> {
-        if (req.user.uid !== uid) {
+        if (user.uid !== uid) {
             throw new ForbiddenException('Not allowed to update user');
         }
         if (Object.entries(dto).length === 0) {
@@ -66,15 +66,18 @@ export class UsersController {
     }
 
     @Delete('/:uid')
-    async deleteUser(@Param('uid') uid: string, @Request() req): Promise<User> {
-        const user = await this.usersService.getOneByUid(uid);
-        if (!user) {
+    async deleteUser(
+        @Param('uid') uid: string,
+        @CurrentUser() user: User,
+    ): Promise<User> {
+        const userToDelete = await this.usersService.getOneByUid(uid);
+        if (!userToDelete) {
             throw new NotFoundException('No such user found');
         }
-        if (req.user.uid != uid) {
+        if (user.uid != uid) {
             throw new ForbiddenException('Not allowed to delete user');
         }
 
-        return this.usersService.delete(req.user.uid);
+        return this.usersService.delete(uid);
     }
 }
