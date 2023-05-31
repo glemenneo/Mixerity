@@ -53,12 +53,10 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Post('/logout')
-    async logout(@Request() req): Promise<User> {
-        const user = await this.authService.logout(req.user.uid);
+    async logout(@Request() req): Promise<void> {
+        await this.authService.logout(req.user.uid);
         req.res.clearCookie('access-token');
         req.res.clearCookie('refresh-token');
-
-        return user;
     }
 
     @UseGuards(JwtAuthGuard)

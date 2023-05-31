@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities';
 import { CreateUserDto, UpdatePasswordDto } from './dtos';
+import { RedisService } from 'src/common/redis/redis.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
         private readonly configService: ConfigService,
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
+        private readonly redisService: RedisService,
     ) {}
 
     async register(dto: CreateUserDto): Promise<User> {
@@ -94,8 +96,9 @@ export class AuthService {
         refreshToken,
     ): Promise<User | null> {
         const user = await this.usersService.getOneByUid(uid);
-        if (!user || !user.refreshToken || user.refreshToken !== refreshToken) {
-            throw new UnauthorizedException('Invalid refresh JWT!');
+        const refreshTokenStore = await this.getRefreshToken(uid);
+        if (!user || !refreshToken || refreshTokenStore !== refreshToken) {
+            throw new UnauthorizedException('Invalid refresh JWT');
         }
 
         return user;
@@ -105,8 +108,8 @@ export class AuthService {
         return this.generateAccessToken(uid);
     }
 
-    logout(uid: string): Promise<User> {
-        return this.updateRefreshToken(uid, null);
+    async logout(uid: string): Promise<void> {
+        await this.updateRefreshToken(uid, null);
     }
 
     async emailTaken(email: string): Promise<boolean> {
@@ -124,32 +127,38 @@ export class AuthService {
         return hash;
     }
 
-    private async generateAccessToken(uid: string): Promise<string> {
+    private generateAccessToken(uid: string): Promise<string> {
         const payload = { sub: uid };
         const options = {
             secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
             expiresIn: this.configService.get<string>('JWT_ACCESS_EXPIRY'),
         };
 
-        const refreshToken = await this.jwtService.signAsync(payload, options);
-        return refreshToken;
+        return this.jwtService.signAsync(payload, options);
     }
 
-    private async generateRefreshToken(uid: string): Promise<string> {
+    private generateRefreshToken(uid: string): Promise<string> {
         const payload = { sub: uid };
         const options = {
             secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
             expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRY'),
         };
 
-        const refreshToken = await this.jwtService.signAsync(payload, options);
-        return refreshToken;
+        return this.jwtService.signAsync(payload, options);
     }
 
-    private updateRefreshToken(
+    private getRefreshToken(uid: string): Promise<string | null> {
+        return this.redisService.get(uid);
+    }
+
+    private async updateRefreshToken(
         uid: string,
         refreshToken: string | null,
-    ): Promise<User> {
-        return this.usersService.update(uid, { uid, refreshToken });
+    ): Promise<void> {
+        if (!refreshToken) {
+            await this.redisService.del(uid);
+        } else {
+            await this.redisService.set(uid, refreshToken);
+        }
     }
 }

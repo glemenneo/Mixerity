@@ -31,10 +31,6 @@ export class User {
     })
     created: string;
 
-    @Exclude()
-    @Column({ nullable: true })
-    refreshToken: string;
-
     @OneToOne((type) => Profile, (profile) => profile.user, {
         cascade: true,
     })
