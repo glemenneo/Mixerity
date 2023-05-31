@@ -8,7 +8,7 @@ import {
     Request,
     Put,
     Get,
-    BadRequestException,
+    ConflictException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -27,14 +27,14 @@ export class AuthController {
 
     @Post('/register')
     async register(@Body() dto: CreateUserDto): Promise<User> {
-        const { email, username, password } = dto;
+        const { email, username } = dto;
         const emailTaken = await this.authService.emailTaken(email);
         if (emailTaken) {
-            throw new BadRequestException('Email is already in use');
+            throw new ConflictException('Email is already in use');
         }
         const usernameTaken = await this.authService.usernameTaken(username);
         if (usernameTaken) {
-            throw new BadRequestException('Username is already in use');
+            throw new ConflictException('Username is already in use');
         }
         return this.authService.register(email, username, password);
     }
