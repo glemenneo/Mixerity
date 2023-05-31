@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtRefreshStrategy, JwtStrategy, LocalStrategy } from './strategies';
-import { RedisModule } from '../common/redis/redis.module';
+import { RedisModule } from '../common/redis';
 
 @Module({
     imports: [

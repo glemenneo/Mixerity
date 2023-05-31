@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities';
 import { CreateUserDto, UpdatePasswordDto } from './dtos';
-import { RedisService } from 'src/common/redis/redis.service';
+import { RedisService } from 'src/common/redis';
 
 @Injectable()
 export class AuthService {
