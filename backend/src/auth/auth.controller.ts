@@ -17,7 +17,7 @@ import {
     RefreshAuthGuard,
 } from 'src/common/guards';
 import { CreateUserDto, UpdatePasswordDto } from './dtos';
-import { User } from 'src/users/entities';
+import { User } from '../common/entities';
 import { CurrentUser } from 'src/common/decorators';
 import { COOKIE_OPTIONS } from 'src/common/constants';
 

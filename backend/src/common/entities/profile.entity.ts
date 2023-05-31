@@ -6,7 +6,7 @@ import {
     JoinTable,
     PrimaryColumn,
 } from 'typeorm';
-import { User } from 'src/users/entities/index';
+import { User } from './';
 
 @Entity()
 export class Profile {

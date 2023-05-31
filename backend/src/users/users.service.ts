@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from './entities';
+import { User } from '../common/entities';
 import { PaginationRequestDto } from '../common/pagination';
 import { UserColumns } from '../common/constants';
 import { CreateUserDto } from '../auth/dtos';

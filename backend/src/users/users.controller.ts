@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../common/guards';
-import { User } from './entities';
+import { User } from '../common/entities';
 import { UpdateUserDto } from './dtos';
 import { PaginationRequestDto } from '../common/pagination';
 import { CurrentUser } from '../common/decorators';

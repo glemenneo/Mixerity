@@ -14,11 +14,10 @@ import {
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { JwtAuthGuard } from '../common/guards';
-import { Profile } from './entities';
+import { User, Profile } from '../common/entities';
 import { UpdateProfileDto } from './dtos';
 import { PaginationRequestDto } from '../common/pagination';
 import { CurrentUser } from '../common/decorators';
-import { User } from '../users/entities';
 
 @Controller('profile')
 @UseGuards(JwtAuthGuard)

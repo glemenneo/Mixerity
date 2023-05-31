@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Profile } from './entities';
+import { Profile } from '../common/entities';
 import { PaginationRequestDto } from 'src/common/pagination';
 import { ProfileColumns } from '../common/constants';
 

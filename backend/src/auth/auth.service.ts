@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/entities';
+import { User } from '../common/entities';
 import { CreateUserDto, UpdatePasswordDto } from './dtos';
 import { RedisService } from 'src/common/redis';
 

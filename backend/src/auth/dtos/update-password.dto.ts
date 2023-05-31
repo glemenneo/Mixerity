@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, MinLength } from 'class-validator';
-import { User } from '../../users/entities';
+import { User } from '../../common/entities';
 
 export class UpdatePasswordDto {
     @IsString()

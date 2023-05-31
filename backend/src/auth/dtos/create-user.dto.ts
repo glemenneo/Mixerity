@@ -5,8 +5,7 @@ import {
     MinLength,
     IsDefined,
 } from 'class-validator';
-import { User } from '../../users/entities';
-import { Profile } from '../../profile/entities';
+import { User, Profile } from '../../common/entities';
 
 export class CreateUserDto {
     @IsDefined()

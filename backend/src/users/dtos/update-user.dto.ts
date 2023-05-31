@@ -5,7 +5,7 @@ import {
     IsNotEmpty,
     MaxLength,
 } from 'class-validator';
-import { User } from '../entities';
+import { User } from '../../common/entities';
 
 export class UpdateUserDto {
     @IsOptional()

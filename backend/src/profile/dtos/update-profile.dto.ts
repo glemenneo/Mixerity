@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsUrl, IsNotEmpty } from 'class-validator';
-import { Profile } from '../entities';
+import { Profile } from '../../common/entities';
 
 export class UpdateProfileDto {
     @IsString()
