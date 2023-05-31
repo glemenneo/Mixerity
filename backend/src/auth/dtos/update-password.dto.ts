@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, MinLength } from 'class-validator';
+import { User } from '../../users/entities';
 
 export class UpdatePasswordDto {
     @IsString()
@@ -10,4 +11,11 @@ export class UpdatePasswordDto {
     @IsNotEmpty()
     @MinLength(8)
     new_password: string;
+
+    toEntity(uid: string): User {
+        const user = new User();
+        user.uid = uid;
+        user.password = this.new_password;
+        return user;
+    }
 }

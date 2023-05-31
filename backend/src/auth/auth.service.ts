@@ -81,7 +81,8 @@ export class AuthService {
         const { old_password, new_password } = dto;
         await this.validateUser(username, old_password);
         const hash = await AuthService.hashAndSalt(new_password);
-        return this.usersService.update(uid, { uid, password: hash });
+        dto.new_password = hash;
+        return this.usersService.updatePassword(uid, dto);
     }
 
     deleteUser(uid: string): Promise<User> {

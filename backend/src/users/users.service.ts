@@ -7,6 +7,7 @@ import { PaginationRequestDto } from '../common/pagination';
 import { UserColumns } from '../common/constants';
 import { CreateUserDto } from '../auth/dtos';
 import { UpdateUserDto } from './dtos';
+import { UpdatePasswordDto } from '../auth/dtos';
 
 @Injectable()
 export class UsersService {
@@ -60,6 +61,11 @@ export class UsersService {
     }
 
     async update(uid: string, dto: UpdateUserDto): Promise<User> {
+        const user = dto.toEntity(uid);
+        return this.usersRepository.save(user);
+    }
+
+    async updatePassword(uid: string, dto: UpdatePasswordDto): Promise<User> {
         const user = dto.toEntity(uid);
         return this.usersRepository.save(user);
     }
