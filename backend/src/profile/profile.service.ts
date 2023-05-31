@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Profile } from '../common/entities';
-import { PaginationRequestDto } from 'src/common/pagination';
 import { ProfileColumns } from '../common/constants';
+import { Profile } from '../common/entities';
+import { PaginationRequestDto } from '../common/pagination';
 
 @Injectable()
 export class ProfileService {

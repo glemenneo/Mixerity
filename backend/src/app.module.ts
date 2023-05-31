@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { ProfileModule } from './profile/profile.module';
-import { PostsModule } from './posts/posts.module';
+import { AuthModule } from './auth';
+import { PostsModule } from './posts';
+import { ProfileModule } from './profile';
+import { UsersModule } from './users';
 
 @Module({
     imports: [

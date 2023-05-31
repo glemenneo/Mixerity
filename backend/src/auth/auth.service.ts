@@ -6,10 +6,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UsersService } from '../users/users.service';
-import { User } from '../common/entities';
 import { CreateUserDto, UpdatePasswordDto } from './dtos';
-import { RedisService } from 'src/common/redis';
+import { User } from '../common/entities';
+import { RedisService } from '../common/redis';
+import { UsersService } from '../users';
 
 @Injectable()
 export class AuthService {

@@ -2,11 +2,11 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtRefreshStrategy, JwtStrategy, LocalStrategy } from './strategies';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from '../users/users.module';
-import { JwtRefreshStrategy, JwtStrategy, LocalStrategy } from './strategies';
 import { RedisModule } from '../common/redis';
+import { UsersModule } from '../users';
 
 @Module({
     imports: [

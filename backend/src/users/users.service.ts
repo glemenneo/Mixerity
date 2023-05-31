@@ -2,12 +2,11 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { UpdateUserDto } from './dtos';
+import { CreateUserDto, UpdatePasswordDto } from '../auth';
+import { UserColumns } from '../common/constants';
 import { User } from '../common/entities';
 import { PaginationRequestDto } from '../common/pagination';
-import { UserColumns } from '../common/constants';
-import { CreateUserDto } from '../auth/dtos';
-import { UpdateUserDto } from './dtos';
-import { UpdatePasswordDto } from '../auth/dtos';
 
 @Injectable()
 export class UsersService {

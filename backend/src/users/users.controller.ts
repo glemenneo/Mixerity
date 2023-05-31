@@ -13,12 +13,12 @@ import {
     NotFoundException,
     ForbiddenException,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { JwtAuthGuard } from '../common/guards';
-import { User } from '../common/entities';
 import { UpdateUserDto } from './dtos';
-import { PaginationRequestDto } from '../common/pagination';
+import { UsersService } from './users.service';
 import { CurrentUser } from '../common/decorators';
+import { User } from '../common/entities';
+import { JwtAuthGuard } from '../common/guards';
+import { PaginationRequestDto } from '../common/pagination';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)

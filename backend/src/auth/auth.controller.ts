@@ -11,15 +11,15 @@ import {
     ConflictException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { CreateUserDto, UpdatePasswordDto } from './dtos';
+import { COOKIE_OPTIONS } from '../common/constants';
+import { CurrentUser } from '../common/decorators';
+import { User } from '../common/entities';
 import {
     LocalAuthGuard,
     JwtAuthGuard,
     RefreshAuthGuard,
-} from 'src/common/guards';
-import { CreateUserDto, UpdatePasswordDto } from './dtos';
-import { User } from '../common/entities';
-import { CurrentUser } from 'src/common/decorators';
-import { COOKIE_OPTIONS } from 'src/common/constants';
+} from '../common/guards';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)

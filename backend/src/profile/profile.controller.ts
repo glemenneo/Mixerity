@@ -12,12 +12,12 @@ import {
     ForbiddenException,
     BadRequestException,
 } from '@nestjs/common';
-import { ProfileService } from './profile.service';
-import { JwtAuthGuard } from '../common/guards';
-import { User, Profile } from '../common/entities';
 import { UpdateProfileDto } from './dtos';
-import { PaginationRequestDto } from '../common/pagination';
+import { ProfileService } from './profile.service';
 import { CurrentUser } from '../common/decorators';
+import { User, Profile } from '../common/entities';
+import { JwtAuthGuard } from '../common/guards';
+import { PaginationRequestDto } from '../common/pagination';
 
 @Controller('profile')
 @UseGuards(JwtAuthGuard)
