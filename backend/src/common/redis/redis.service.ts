@@ -18,9 +18,9 @@ export class RedisService {
 
             this.isConnected = true;
             console.log(
-                `Redis connected on port ${this.configService.get(
-                    'REDIS_PORT',
-                )}.`,
+                `Redis connected on ${this.configService.get(
+                    'REDIS_HOST',
+                )}:${this.configService.get('REDIS_PORT')}.`,
             );
         }
     }
