@@ -11,6 +11,7 @@ import {
     Query,
     ForbiddenException,
     BadRequestException,
+    ParseUUIDPipe,
 } from '@nestjs/common';
 import { UpdateProfileDto } from './dtos';
 import { ProfileService } from './profile.service';
@@ -32,7 +33,7 @@ export class ProfileController {
     }
 
     @Get('/:uid')
-    async getOne(@Param('uid') uid: string): Promise<Profile> {
+    async getOne(@Param('uid', ParseUUIDPipe) uid: string): Promise<Profile> {
         const profile = await this.profileService.findOneByUidEager(uid);
         if (!profile) {
             throw new NotFoundException('No such profile found');
@@ -42,7 +43,7 @@ export class ProfileController {
 
     @Put('/:uid')
     updateProfile(
-        @Param('uid') uid: string,
+        @Param('uid', ParseUUIDPipe) uid: string,
         @Body() dto: UpdateProfileDto,
         @CurrentUser() user: User,
     ): Promise<Profile> {
@@ -58,7 +59,7 @@ export class ProfileController {
 
     @Post('/follow/:uid')
     async follow(
-        @Param('uid') otherUid: string,
+        @Param('uid', ParseUUIDPipe) otherUid: string,
         @CurrentUser() user: User,
     ): Promise<Profile> {
         const otherProfile = await this.profileService.findOneByUid(otherUid);
@@ -71,7 +72,7 @@ export class ProfileController {
 
     @Delete('/unfollow/:uid')
     async unFollow(
-        @Param('uid') otherUid: string,
+        @Param('uid', ParseUUIDPipe) otherUid: string,
         @CurrentUser() user: User,
     ): Promise<Profile> {
         const otherProfile = await this.profileService.findOneByUid(otherUid);

@@ -12,6 +12,7 @@ import {
     BadRequestException,
     NotFoundException,
     ForbiddenException,
+    ParseUUIDPipe,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dtos';
 import { UsersService } from './users.service';
@@ -32,7 +33,7 @@ export class UsersController {
     }
 
     @Get('/:uid')
-    async getOneUser(@Param('uid') uid: string): Promise<User> {
+    async getOneUser(@Param('uid', ParseUUIDPipe) uid: string): Promise<User> {
         const user = await this.usersService.getOneByUid(uid);
         if (!user) {
             throw new NotFoundException('No such user found');
@@ -42,7 +43,7 @@ export class UsersController {
 
     @Put('/:uid')
     async updateUser(
-        @Param('uid') uid: string,
+        @Param('uid', ParseUUIDPipe) uid: string,
         @Body() dto: UpdateUserDto,
         @CurrentUser() user: User,
     ): Promise<User> {
@@ -67,7 +68,7 @@ export class UsersController {
 
     @Delete('/:uid')
     async deleteUser(
-        @Param('uid') uid: string,
+        @Param('uid', ParseUUIDPipe) uid: string,
         @CurrentUser() user: User,
     ): Promise<User> {
         const userToDelete = await this.usersService.getOneByUid(uid);
