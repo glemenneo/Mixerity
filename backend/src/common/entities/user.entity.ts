@@ -7,7 +7,7 @@ import {
     DeleteDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { Profile } from './';
+import { Profile } from './profile.entity';
 
 @Entity()
 export class User {
