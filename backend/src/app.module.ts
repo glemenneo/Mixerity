@@ -10,11 +10,7 @@ import { UsersModule } from './users';
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            envFilePath: [
-                process.env.NODE_ENV === 'production'
-                    ? '.env'
-                    : `.env.${process.env.NODE_ENV}`,
-            ],
+            envFilePath: ['.env'],
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
